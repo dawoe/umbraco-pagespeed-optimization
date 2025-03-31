@@ -11,6 +11,26 @@
           "StyleCop.Analyzers.Unstable": "1.2.0.435"
         }
       },
+      "Umbraco.Cms.Web.BackOffice": {
+        "type": "Direct",
+        "requested": "[13.0.0, 14.0.0)",
+        "resolved": "13.0.0",
+        "contentHash": "QtWAvGHnx9XRM2t+QiAt8IMaroCEVxSnl4TD17PjDWOCIMUebtoI0YPVyrrs01O63h9587c+eFIZh6YMWJyDZg==",
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.3",
+          "Serilog.AspNetCore": "8.0.0",
+          "Umbraco.Cms.Web.Common": "[13.0.0, 14.0.0)"
+        }
+      },
+      "Umbraco.Cms.Web.Website": {
+        "type": "Direct",
+        "requested": "[13.0.0, 14.0.0)",
+        "resolved": "13.0.0",
+        "contentHash": "EFpo37/hVP53sRZddETv1ozfG87FbboUWjlthqvQVgC1LrLVFB0ozGwnOrcdSad70wGfSqP7OboapWloYwpqRA==",
+        "dependencies": {
+          "Umbraco.Cms.Web.Common": "[13.0.0, 14.0.0)"
+        }
+      },
       "Asp.Versioning.Abstractions": {
         "type": "Transitive",
         "resolved": "7.0.0",
@@ -2087,16 +2107,6 @@
           "Umbraco.Cms.Infrastructure": "[13.0.0, 14.0.0)"
         }
       },
-      "Umbraco.Cms.Web.BackOffice": {
-        "type": "Transitive",
-        "resolved": "13.0.0",
-        "contentHash": "QtWAvGHnx9XRM2t+QiAt8IMaroCEVxSnl4TD17PjDWOCIMUebtoI0YPVyrrs01O63h9587c+eFIZh6YMWJyDZg==",
-        "dependencies": {
-          "Newtonsoft.Json": "13.0.3",
-          "Serilog.AspNetCore": "8.0.0",
-          "Umbraco.Cms.Web.Common": "[13.0.0, 14.0.0)"
-        }
-      },
       "Umbraco.Cms.Web.Common": {
         "type": "Transitive",
         "resolved": "13.0.0",
@@ -2117,21 +2127,17 @@
           "Umbraco.Cms.PublishedCache.NuCache": "[13.0.0, 14.0.0)"
         }
       },
-      "Umbraco.Cms.Web.Website": {
-        "type": "Transitive",
-        "resolved": "13.0.0",
-        "contentHash": "EFpo37/hVP53sRZddETv1ozfG87FbboUWjlthqvQVgC1LrLVFB0ozGwnOrcdSad70wGfSqP7OboapWloYwpqRA==",
-        "dependencies": {
-          "Umbraco.Cms.Web.Common": "[13.0.0, 14.0.0)"
-        }
-      },
       "Umbraco.CSharpTest.Net.Collections": {
         "type": "Transitive",
         "resolved": "15.0.0",
         "contentHash": "YSDIkxq44VMy2N3jBTwJBJ/ZjGyuyb0GRyfQAUIma07dCHIbjXgKXjZaAxVa6ik3XTqgcyATvwYJL0EBtAClwA=="
       },
       "umbraco.community.pagespeedoptimizer.core": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "Umbraco.Cms.Web.BackOffice": "[13.0.0, 14.0.0)",
+          "Umbraco.Cms.Web.Website": "[13.0.0, 14.0.0)"
+        }
       },
       "umbraco.community.pagespeedoptimizer.infrastructure": {
         "type": "Project",

@@ -2133,7 +2133,11 @@
         "contentHash": "YSDIkxq44VMy2N3jBTwJBJ/ZjGyuyb0GRyfQAUIma07dCHIbjXgKXjZaAxVa6ik3XTqgcyATvwYJL0EBtAClwA=="
       },
       "umbraco.community.pagespeedoptimizer.core": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "Umbraco.Cms.Web.BackOffice": "[13.0.0, 14.0.0)",
+          "Umbraco.Cms.Web.Website": "[13.0.0, 14.0.0)"
+        }
       }
     }
   }
