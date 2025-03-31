@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{1DBC6ECB-6
 		test\Directory.Build.props = test\Directory.Build.props
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.Community.PagespeedOptimizer.Infrastructure", "code\Umbraco.Community.PagespeedOptimizer.Infrastructure\Umbraco.Community.PagespeedOptimizer.Infrastructure.csproj", "{EFDFAD68-F547-44E1-8A60-766D1D5FB361}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,18 @@ Global
 		{56A46EC0-E21E-4602-8E9B-D2B7DF8456BB}.Release|x64.Build.0 = Release|Any CPU
 		{56A46EC0-E21E-4602-8E9B-D2B7DF8456BB}.Release|x86.ActiveCfg = Release|Any CPU
 		{56A46EC0-E21E-4602-8E9B-D2B7DF8456BB}.Release|x86.Build.0 = Release|Any CPU
+		{EFDFAD68-F547-44E1-8A60-766D1D5FB361}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFDFAD68-F547-44E1-8A60-766D1D5FB361}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFDFAD68-F547-44E1-8A60-766D1D5FB361}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EFDFAD68-F547-44E1-8A60-766D1D5FB361}.Debug|x64.Build.0 = Debug|Any CPU
+		{EFDFAD68-F547-44E1-8A60-766D1D5FB361}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EFDFAD68-F547-44E1-8A60-766D1D5FB361}.Debug|x86.Build.0 = Debug|Any CPU
+		{EFDFAD68-F547-44E1-8A60-766D1D5FB361}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFDFAD68-F547-44E1-8A60-766D1D5FB361}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFDFAD68-F547-44E1-8A60-766D1D5FB361}.Release|x64.ActiveCfg = Release|Any CPU
+		{EFDFAD68-F547-44E1-8A60-766D1D5FB361}.Release|x64.Build.0 = Release|Any CPU
+		{EFDFAD68-F547-44E1-8A60-766D1D5FB361}.Release|x86.ActiveCfg = Release|Any CPU
+		{EFDFAD68-F547-44E1-8A60-766D1D5FB361}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
