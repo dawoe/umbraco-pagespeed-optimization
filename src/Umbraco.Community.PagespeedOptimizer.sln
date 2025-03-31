@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{1DBC6ECB-6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.Community.PagespeedOptimizer.Infrastructure", "code\Umbraco.Community.PagespeedOptimizer.Infrastructure\Umbraco.Community.PagespeedOptimizer.Infrastructure.csproj", "{EFDFAD68-F547-44E1-8A60-766D1D5FB361}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.Community.PagespeedOptimizer.Infrastructure.Tests", "test\Umbraco.Community.PagespeedOptimizer.Infrastructure.Tests\Umbraco.Community.PagespeedOptimizer.Infrastructure.Tests.csproj", "{D07272EB-A5BA-4E44-A746-591ED0D12AAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,18 @@ Global
 		{EFDFAD68-F547-44E1-8A60-766D1D5FB361}.Release|x64.Build.0 = Release|Any CPU
 		{EFDFAD68-F547-44E1-8A60-766D1D5FB361}.Release|x86.ActiveCfg = Release|Any CPU
 		{EFDFAD68-F547-44E1-8A60-766D1D5FB361}.Release|x86.Build.0 = Release|Any CPU
+		{D07272EB-A5BA-4E44-A746-591ED0D12AAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D07272EB-A5BA-4E44-A746-591ED0D12AAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D07272EB-A5BA-4E44-A746-591ED0D12AAD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D07272EB-A5BA-4E44-A746-591ED0D12AAD}.Debug|x64.Build.0 = Debug|Any CPU
+		{D07272EB-A5BA-4E44-A746-591ED0D12AAD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D07272EB-A5BA-4E44-A746-591ED0D12AAD}.Debug|x86.Build.0 = Debug|Any CPU
+		{D07272EB-A5BA-4E44-A746-591ED0D12AAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D07272EB-A5BA-4E44-A746-591ED0D12AAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D07272EB-A5BA-4E44-A746-591ED0D12AAD}.Release|x64.ActiveCfg = Release|Any CPU
+		{D07272EB-A5BA-4E44-A746-591ED0D12AAD}.Release|x64.Build.0 = Release|Any CPU
+		{D07272EB-A5BA-4E44-A746-591ED0D12AAD}.Release|x86.ActiveCfg = Release|Any CPU
+		{D07272EB-A5BA-4E44-A746-591ED0D12AAD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
