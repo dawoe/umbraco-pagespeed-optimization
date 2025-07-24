@@ -1,0 +1,57 @@
+name: PR validation
+
+on:
+  pull_request:
+    branches:
+    - v13/develop
+
+jobs:
+  build:
+    permissions:
+      pull-requests: write
+      contents: read
+    env:
+        BUILD_CONFIG: 'Release'
+  
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.x'
+      
+      - name: Restore
+        run: dotnet restore 
+        working-directory: src/
+      
+      - name: Build
+        run: dotnet build -c ${{ env.BUILD_CONFIG }} --no-restore
+        working-directory: src/
+      
+      - name: Test
+        run: dotnet test -c ${{ env.BUILD_CONFIG }} --no-restore --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+        working-directory: src/
+      
+              
+      - name: ReportGenerator
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.10
+        with:
+            reports: '**/coverage.cobertura.xml'
+            targetdir: reports
+            reporttypes: MarkdownSummary;MarkdownDeltaSummary
+            sourcedirs: src
+            historydir: history      
+
+      - name: Add Coverage PR Comment
+        uses: marocchino/sticky-pull-request-comment@v2       
+        with:
+            recreate: true
+            path: reports/Summary.md
+
+      - name: Write to Job Summary
+        run: cat reports/Summary.md >> $GITHUB_STEP_SUMMARY
+
+ 
