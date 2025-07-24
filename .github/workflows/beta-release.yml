@@ -1,0 +1,65 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: Beta Release
+
+on:
+  push:
+    branches: [ "v13/develop" ]
+
+env:
+  BUILD_CONFIG: 'Release'
+  NuGetDirectory: ${{ github.workspace}}/nuget
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  build:
+   
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.x'
+      
+      - name: Restore
+        run: dotnet restore 
+        working-directory: src/
+      
+      - name: Build
+        run: dotnet build -c ${{ env.BUILD_CONFIG }} --no-restore
+        working-directory: src/
+      
+      - name: Test
+        run: dotnet test -c ${{ env.BUILD_CONFIG }} --no-restore --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+        working-directory: src/
+                    
+      - name: ReportGenerator
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.10
+        with:
+            reports: '**/coverage.cobertura.xml'
+            targetdir: reports
+            reporttypes: MarkdownSummary;MarkdownDeltaSummary
+            sourcedirs: src
+            historydir: history      
+
+      - name: Write to Job Summary
+        run: cat reports/Summary.md >> $GITHUB_STEP_SUMMARY
+        
+      - name: Pack
+        run: dotnet pack -c ${{ env.BUILD_CONFIG }} --no-restore --no-build --output ${{ env.NuGetDirectory }} --version-suffix beta-${{github.run_number}}
+        working-directory: src/
+        
+      - name: Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: nuget
+          if-no-files-found: error
+          retention-days: 30
+          path: ${{ env.NuGetDirectory }}  
