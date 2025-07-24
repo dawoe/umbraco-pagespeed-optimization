@@ -35,8 +35,9 @@
       <PackageIconUrl />
       <PackageIcon>logo.png</PackageIcon>
       <PackageReadmeFile>readme.md</PackageReadmeFile>
+      <PackageLicenseExpression>MIT</PackageLicenseExpression>
       <Description>This Umbraco package improves your Google page speed score. This package automatically optimizes your site's front-end performance with zero coding required.</Description>
-      <PackageTags>umbraco, umbraco-marketplace</PackageTags>
+      <PackageTags>umbraco</PackageTags>
       <RepositoryType>git</RepositoryType>
       <Copyright>Copyright &amp;#169; Dave Woestenborghs and contributors.</Copyright>
       <PackageLicenseExpression>MIT</PackageLicenseExpression>
