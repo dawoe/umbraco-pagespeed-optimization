@@ -12,4 +12,9 @@ public sealed class PageSpeedOptimizerSettings
     /// The configuration section name.
     /// </summary>
     public const string SectionName = "Umbraco:Community:PageSpeedOptimizer";
+
+    /// <summary>
+    /// Gets or sets the static assets cache configuration.
+    /// </summary>
+    public StaticAssetsCache StaticAssetsCache { get; set; } = new();
 }
