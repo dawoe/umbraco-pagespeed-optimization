@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Options;
+using Microsoft.Net.Http.Headers;
 using Umbraco.Cms.Core.Configuration.Models;
 using Umbraco.Cms.Core.Hosting;
 using Umbraco.Community.PagespeedOptimizer.Core.Configuration;
@@ -31,6 +33,11 @@ internal sealed class StaticFileOptionsConfiguration(
             return;
         }
 
+        if (this.staticAssetsCacheSettings.CacheExtensions.Count == 0)
+        {
+            return;
+        }
+
         options.OnPrepareResponse += this.PrepareResponseHandler;
     }
 
@@ -40,5 +47,38 @@ internal sealed class StaticFileOptionsConfiguration(
     /// <param name="context">A <see cref="StaticFileResponseContext"/>.</param>
     internal void PrepareResponseHandler(StaticFileResponseContext context)
     {
+        if (this.CanRequestBeCached(context) == false)
+        {
+            return;
+        }
+
+        this.ApplyCacheHeaders(context);
+    }
+
+    private bool CanRequestBeCached(StaticFileResponseContext context)
+    {
+        if (context.Context.Request.Path.StartsWithSegments(this.backOfficePath))
+        {
+            return false;
+        }
+
+        var fileExtension = Path.GetExtension(context.File.Name);
+
+        if (string.IsNullOrWhiteSpace(fileExtension))
+        {
+            return false;
+        }
+
+        return this.staticAssetsCacheSettings.CacheExtensions.Contains(fileExtension.TrimStart("."));
+    }
+
+    private void ApplyCacheHeaders(StaticFileResponseContext context)
+    {
+        var headers = context.Context.Response.GetTypedHeaders();
+
+        var cacheControl = headers.CacheControl ?? new CacheControlHeaderValue();
+        cacheControl.Public = true;
+        cacheControl.MaxAge = TimeSpan.FromDays(this.staticAssetsCacheSettings.MaxAgeInDays);
+        headers.CacheControl = cacheControl;
     }
 }
