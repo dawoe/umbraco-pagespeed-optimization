@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace Umbraco.Community.PagespeedOptimizer.Configuration;
+namespace Umbraco.Community.PagespeedOptimizer.Core.Configuration;
 
 /// <summary>
 /// Settings object for static assets caching.
