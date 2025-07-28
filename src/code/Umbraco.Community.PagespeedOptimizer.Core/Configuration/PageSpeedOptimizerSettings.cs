@@ -22,4 +22,9 @@ public sealed class PageSpeedOptimizerSettings
     /// Gets or sets the response compression configuration.
     /// </summary>
     public ResponseCompressionSettings ResponseCompression { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the image optimization settings.
+    /// </summary>
+    public ImageOptimizationSettings ImageOptimization { get; set; } = new();
 }
