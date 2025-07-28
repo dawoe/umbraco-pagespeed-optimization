@@ -1,3 +1,5 @@
+using Umbraco.Community.PagespeedOptimizer.Extensions;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.CreateUmbracoBuilder()
@@ -8,6 +10,7 @@ builder.CreateUmbracoBuilder()
     .Build();
 
 WebApplication app = builder.Build();
+app.EnableResponseCompression();
 
 await app.BootUmbracoAsync();
 
