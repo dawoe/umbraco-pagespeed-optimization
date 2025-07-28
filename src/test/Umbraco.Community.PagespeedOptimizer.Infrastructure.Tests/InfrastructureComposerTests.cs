@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Moq;
 using Smidge;
 using Smidge.Options;
@@ -70,7 +72,7 @@ internal sealed class InfrastructureComposerTests
     }
 
     /// <summary>
-    /// Test that <see cref="SmidgeOptions"/> are not modified when static cache is disabled
+    /// Test that <see cref="SmidgeOptions"/> are not modified when static cache is disabled.
     /// </summary>
     [Test]
     public void Given_Static_Cache_Is_Disabled_SmidgeOptions_Should_Not_Be_Changed()
@@ -90,7 +92,7 @@ internal sealed class InfrastructureComposerTests
     }
 
     /// <summary>
-    /// Test that <see cref="SmidgeOptions"/> are not modified when static cache is enabled but ApplyToSmidgeBundles is set to false
+    /// Test that <see cref="SmidgeOptions"/> are not modified when static cache is enabled but ApplyToSmidgeBundles is set to false.
     /// </summary>
     [Test]
     public void Given_Static_Cache_Is_Enabled_But_ApplyToSmidgeBundles_Is_False_SmidgeOptions_Should_Not_Be_Changed()
@@ -111,7 +113,7 @@ internal sealed class InfrastructureComposerTests
     }
 
     /// <summary>
-    /// Test that <see cref="SmidgeOptions"/> are not modified when static cache is enabled but ApplyToSmidgeBundles is set to false
+    /// Test that <see cref="SmidgeOptions"/> are not modified when static cache is enabled but ApplyToSmidgeBundles is set to false.
     /// </summary>
     [Test]
     public void Given_Static_Cache_Is_Enabled_But_ApplyToSmidgeBundles_Is_True_SmidgeOptions_Should_Be_Changed()
@@ -131,6 +133,47 @@ internal sealed class InfrastructureComposerTests
             Assert.That(smidgeOptions?.Value, Is.Not.Null);
             Assert.That(smidgeOptions?.Value.DefaultBundleOptions.DebugOptions.CacheControlOptions.CacheControlMaxAge, Is.EqualTo(cacheDurationInHours));
             Assert.That(smidgeOptions?.Value.DefaultBundleOptions.ProductionOptions.CacheControlOptions.CacheControlMaxAge, Is.EqualTo(cacheDurationInHours));
+        });
+    }
+
+    /// <summary>
+    /// Tests that response compression services are not registered when it is disabled.
+    /// </summary>
+    [Test]
+    public void Given_Response_Compression_Is_Disabled_Services_Should_Not_Be_Registered()
+    {
+        var settings = new PageSpeedOptimizerSettings();
+
+        this.Compose(settings);
+
+        Assert.Multiple(() =>
+        {
+            var compressionOptions = this.serviceProvider.GetService<IOptions<ResponseCompressionOptions>>();
+
+            Assert.That(compressionOptions?.Value, Is.Not.Null);
+            Assert.That(compressionOptions?.Value.EnableForHttps, Is.False);
+            Assert.That(compressionOptions?.Value.Providers.Count, Is.EqualTo(0));
+        });
+    }
+
+    /// <summary>
+    /// Tests that response compression services are registered when it is enabled.
+    /// </summary>
+    [Test]
+    public void Given_Response_Compression_Is_Enabled_Services_Should_Be_Registered()
+    {
+        var settings = new PageSpeedOptimizerSettings();
+        settings.ResponseCompression.Enabled = true;
+
+        this.Compose(settings);
+
+        Assert.Multiple(() =>
+        {
+            var compressionOptions = this.serviceProvider.GetService<IOptions<ResponseCompressionOptions>>();
+
+            Assert.That(compressionOptions?.Value, Is.Not.Null);
+            Assert.That(compressionOptions?.Value.EnableForHttps, Is.True);
+            Assert.That(compressionOptions?.Value.Providers.Count, Is.EqualTo(2));
         });
     }
 

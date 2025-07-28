@@ -1,4 +1,6 @@
+using System.IO.Compression;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Smidge.Options;
@@ -21,7 +23,8 @@ internal static class UmbracoBuilderExtensions
     public static IUmbracoBuilder AddPagespeedOptimizer(this IUmbracoBuilder builder) =>
         builder
             .LoadConfiguration()
-            .AddStaticCache();
+            .AddStaticCache()
+            .AddResponseCompression();
 
     private static IUmbracoBuilder LoadConfiguration(this IUmbracoBuilder builder)
     {
@@ -49,6 +52,35 @@ internal static class UmbracoBuilderExtensions
         {
             options.DefaultBundleOptions.DebugOptions.CacheControlOptions.CacheControlMaxAge = configuration.StaticAssetsCache.MaxAgeInDays * 24;
             options.DefaultBundleOptions.ProductionOptions.CacheControlOptions.CacheControlMaxAge = configuration.StaticAssetsCache.MaxAgeInDays * 24;
+        });
+
+        return builder;
+    }
+
+    private static IUmbracoBuilder AddResponseCompression(this IUmbracoBuilder builder)
+    {
+        var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IOptions<PageSpeedOptimizerSettings>>();
+
+        if (configuration.Value.ResponseCompression.Enabled == false)
+        {
+            return builder;
+        }
+
+        builder.Services.AddResponseCompression(options =>
+        {
+            options.EnableForHttps = true;
+            options.Providers.Add<GzipCompressionProvider>();
+            options.Providers.Add<BrotliCompressionProvider>();
+        });
+
+        builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+        {
+            options.Level = CompressionLevel.Optimal;
+        });
+
+        builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+        {
+            options.Level = CompressionLevel.Optimal;
         });
 
         return builder;

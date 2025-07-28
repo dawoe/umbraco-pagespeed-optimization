@@ -16,5 +16,10 @@ public sealed class PageSpeedOptimizerSettings
     /// <summary>
     /// Gets or sets the static assets cache configuration.
     /// </summary>
-    public StaticAssetsCache StaticAssetsCache { get; set; } = new();
+    public StaticAssetsCacheSettings StaticAssetsCache { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the response compression configuration.
+    /// </summary>
+    public ResponseCompressionSettings ResponseCompression { get; set; } = new();
 }
