@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using Smidge;
+using Smidge.Options;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Community.PagespeedOptimizer.Core.Configuration;
@@ -67,6 +69,71 @@ internal sealed class InfrastructureComposerTests
         Assert.That(this.serviceCollection.Any(x => x.ImplementationType == typeof(StaticFileOptionsConfiguration) && x.Lifetime == ServiceLifetime.Transient), Is.True);
     }
 
+    /// <summary>
+    /// Test that <see cref="SmidgeOptions"/> are not modified when static cache is disabled
+    /// </summary>
+    [Test]
+    public void Given_Static_Cache_Is_Disabled_SmidgeOptions_Should_Not_Be_Changed()
+    {
+        var settings = new PageSpeedOptimizerSettings();
+
+        this.Compose(settings);
+
+        var smidgeOptions = this.serviceProvider.GetService<IOptions<SmidgeOptions>>();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(smidgeOptions?.Value, Is.Not.Null);
+            Assert.That(smidgeOptions?.Value.DefaultBundleOptions.DebugOptions.CacheControlOptions.CacheControlMaxAge, Is.EqualTo(240));
+            Assert.That(smidgeOptions?.Value.DefaultBundleOptions.ProductionOptions.CacheControlOptions.CacheControlMaxAge, Is.EqualTo(240));
+        });
+    }
+
+    /// <summary>
+    /// Test that <see cref="SmidgeOptions"/> are not modified when static cache is enabled but ApplyToSmidgeBundles is set to false
+    /// </summary>
+    [Test]
+    public void Given_Static_Cache_Is_Enabled_But_ApplyToSmidgeBundles_Is_False_SmidgeOptions_Should_Not_Be_Changed()
+    {
+        var settings = new PageSpeedOptimizerSettings();
+        settings.StaticAssetsCache.Enabled = true;
+
+        this.Compose(settings);
+
+        var smidgeOptions = this.serviceProvider.GetService<IOptions<SmidgeOptions>>();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(smidgeOptions?.Value, Is.Not.Null);
+            Assert.That(smidgeOptions?.Value.DefaultBundleOptions.DebugOptions.CacheControlOptions.CacheControlMaxAge, Is.EqualTo(240));
+            Assert.That(smidgeOptions?.Value.DefaultBundleOptions.ProductionOptions.CacheControlOptions.CacheControlMaxAge, Is.EqualTo(240));
+        });
+    }
+
+    /// <summary>
+    /// Test that <see cref="SmidgeOptions"/> are not modified when static cache is enabled but ApplyToSmidgeBundles is set to false
+    /// </summary>
+    [Test]
+    public void Given_Static_Cache_Is_Enabled_But_ApplyToSmidgeBundles_Is_True_SmidgeOptions_Should_Be_Changed()
+    {
+        var settings = new PageSpeedOptimizerSettings();
+        settings.StaticAssetsCache.Enabled = true;
+        settings.StaticAssetsCache.ApplyToSmidgeBundles = true;
+
+        this.Compose(settings);
+
+        var smidgeOptions = this.serviceProvider.GetService<IOptions<SmidgeOptions>>();
+
+        var cacheDurationInHours = settings.StaticAssetsCache.MaxAgeInDays * 24;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(smidgeOptions?.Value, Is.Not.Null);
+            Assert.That(smidgeOptions?.Value.DefaultBundleOptions.DebugOptions.CacheControlOptions.CacheControlMaxAge, Is.EqualTo(cacheDurationInHours));
+            Assert.That(smidgeOptions?.Value.DefaultBundleOptions.ProductionOptions.CacheControlOptions.CacheControlMaxAge, Is.EqualTo(cacheDurationInHours));
+        });
+    }
+
     private void Compose(PageSpeedOptimizerSettings settings)
     {
         var settingsDictionary = this.MapToSettingsToDictionary(settings, PageSpeedOptimizerSettings.SectionName);
@@ -79,6 +146,8 @@ internal sealed class InfrastructureComposerTests
         this.serviceCollection = new ServiceCollection();
 
         this.builder = new UmbracoBuilder(this.serviceCollection, config, new TypeLoader(Mock.Of<ITypeFinder>(), Mock.Of<ILogger<TypeLoader>>()));
+
+        this.builder.Services.AddSmidge(config);
 
         var composer = new InfrastructureComposer();
 

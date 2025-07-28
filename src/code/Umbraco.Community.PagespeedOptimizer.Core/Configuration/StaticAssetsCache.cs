@@ -29,7 +29,7 @@ public sealed class StaticAssetsCache
     public ISet<string> CacheExtensions { get; set; } = DefaultCacheExtensions;
 
     /// <summary>
-    /// Gets a value indicating whether static cache settings should be applied to smidge bundles.
+    /// Gets or sets a value indicating whether static cache settings should be applied to smidge bundles.
     /// </summary>
     /// <remarks>Defaults to false.</remarks>
     public bool ApplyToSmidgeBundles { get; set; } = false;
