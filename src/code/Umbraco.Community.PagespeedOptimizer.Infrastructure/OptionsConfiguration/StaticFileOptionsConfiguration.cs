@@ -22,7 +22,7 @@ internal sealed class StaticFileOptionsConfiguration(
     IHostingEnvironment hostingEnvironment)
     : IConfigureOptions<StaticFileOptions>
 {
-    private readonly StaticAssetsCache staticAssetsCacheSettings = pageSpeedOptimizerSettings.Value.StaticAssetsCache;
+    private readonly StaticAssetsCacheSettings staticAssetsCacheSettings = pageSpeedOptimizerSettings.Value.StaticAssetsCache;
     private readonly string backOfficePath = globalSettings.Value.GetBackOfficePath(hostingEnvironment);
 
     /// <inheritdoc />

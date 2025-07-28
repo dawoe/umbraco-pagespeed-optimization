@@ -6,7 +6,7 @@ namespace Umbraco.Community.PagespeedOptimizer.Core.Configuration;
 /// Settings object for static assets caching.
 /// </summary>
 [ExcludeFromCodeCoverage]
-public sealed class StaticAssetsCache
+public sealed class StaticAssetsCacheSettings
 {
     private static readonly ISet<string> DefaultCacheExtensions = new HashSet<string> { "js", "css", "svg", "woff2", "woff", "otf", "ttf", "ico", "jpg", "png", "gif", "webp" };
 
