@@ -21,18 +21,6 @@ public sealed class ImageOptimizationSettings
     public int DefaultImageQuality { get; set; } = 85;
 
     /// <summary>
-    /// Gets or sets a value indicating whether the image optimization should be set as a querystring parameters.
-    /// </summary>
-    /// <remarks>Defaults to true.</remarks>
-    public bool UseQueryString { get; set; } = true;
-
-    /// <summary>
-    /// Gets or sets extension specific image quality settings.
-    /// </summary>
-    /// <remarks>By default, nothing is set. If a specific value is not found the <see cref="DefaultImageQuality"/> value will be used.</remarks>
-    public IReadOnlyDictionary<string, int> ExtensionSpecificImageQuality { get; set; } = new Dictionary<string, int>();
-
-    /// <summary>
     /// Gets or sets a value indicating whether to force serving all images in webp format.
     /// </summary>
     /// <remarks>Defaults to false.</remarks>

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
-using Umbraco.Cms.Core.Configuration.Models;
 using Umbraco.Cms.Core.Hosting;
 using Umbraco.Community.PagespeedOptimizer.Core.Configuration;
 using Umbraco.Extensions;
@@ -13,17 +12,15 @@ namespace Umbraco.Community.PagespeedOptimizer.Infrastructure.OptionsConfigurati
 /// <summary>
 /// Static file options configuration.
 /// </summary>
-/// <param name="globalSettings">A <see cref="IOptions{GlobalSettings}"/>.</param>
 /// <param name="pageSpeedOptimizerSettings">A <see cref="IOptions{PageSpeedOptimizerSettings}"/>.</param>
 /// <param name="hostingEnvironment">A <see cref="IHostingEnvironment"/>.</param>
 internal sealed class StaticFileOptionsConfiguration(
-    IOptions<GlobalSettings> globalSettings,
     IOptions<PageSpeedOptimizerSettings> pageSpeedOptimizerSettings,
     IHostingEnvironment hostingEnvironment)
     : IConfigureOptions<StaticFileOptions>
 {
     private readonly StaticAssetsCacheSettings staticAssetsCacheSettings = pageSpeedOptimizerSettings.Value.StaticAssetsCache;
-    private readonly string backOfficePath = globalSettings.Value.GetBackOfficePath(hostingEnvironment);
+    private readonly string backOfficePath = hostingEnvironment.GetBackOfficePath();
 
     /// <inheritdoc />
     public void Configure(StaticFileOptions options)

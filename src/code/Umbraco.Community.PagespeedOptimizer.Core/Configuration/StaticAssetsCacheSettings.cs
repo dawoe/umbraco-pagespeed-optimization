@@ -27,10 +27,4 @@ public sealed class StaticAssetsCacheSettings
     /// </summary>
     /// <remarks>By default, js, css, svg, woff2, woff, otf, ttf, ico, jpg, png, gif and webp we are cached.</remarks>
     public ISet<string> CacheExtensions { get; set; } = DefaultCacheExtensions;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether static cache settings should be applied to smidge bundles.
-    /// </summary>
-    /// <remarks>Defaults to false.</remarks>
-    public bool ApplyToSmidgeBundles { get; set; } = false;
 }

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Smidge.Options;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Community.PagespeedOptimizer.Core.Configuration;
 using Umbraco.Community.PagespeedOptimizer.Infrastructure.OptionsConfiguration;
@@ -42,17 +41,6 @@ internal static class UmbracoBuilderExtensions
         }
 
         builder.Services.AddTransient<IConfigureOptions<StaticFileOptions>, StaticFileOptionsConfiguration>();
-
-        if (configuration.StaticAssetsCache.ApplyToSmidgeBundles == false)
-        {
-            return builder;
-        }
-
-        builder.Services.Configure<SmidgeOptions>(options =>
-        {
-            options.DefaultBundleOptions.DebugOptions.CacheControlOptions.CacheControlMaxAge = configuration.StaticAssetsCache.MaxAgeInDays * 24;
-            options.DefaultBundleOptions.ProductionOptions.CacheControlOptions.CacheControlMaxAge = configuration.StaticAssetsCache.MaxAgeInDays * 24;
-        });
 
         return builder;
     }

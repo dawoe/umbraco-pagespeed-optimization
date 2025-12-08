@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Moq;
-using Umbraco.Cms.Core.Configuration.Models;
 using Umbraco.Cms.Core.Hosting;
 using Umbraco.Community.PagespeedOptimizer.Core.Configuration;
 using Umbraco.Community.PagespeedOptimizer.Infrastructure.OptionsConfiguration;
@@ -17,7 +16,6 @@ namespace Umbraco.Community.PagespeedOptimizer.Infrastructure.Tests.OptionsConfi
 [TestFixture]
 internal sealed class StaticFileOptionsConfigurationTests
 {
-    private GlobalSettings globalSettings = null!;
     private PageSpeedOptimizerSettings pageSpeedOptimizerSettings = null!;
     private StaticFileOptionsConfiguration configuration = null!;
 
@@ -32,15 +30,10 @@ internal sealed class StaticFileOptionsConfigurationTests
         var pageSpeedOptimizerOptionsMock = new Mock<IOptions<PageSpeedOptimizerSettings>>();
         pageSpeedOptimizerOptionsMock.SetupGet(x => x.Value).Returns(this.pageSpeedOptimizerSettings);
 
-        this.globalSettings = new GlobalSettings();
-
-        var globalSettingsMock = new Mock<IOptions<GlobalSettings>>();
-        globalSettingsMock.SetupGet(x => x.Value).Returns(this.globalSettings);
-
         var hostingEnvironment = new Mock<IHostingEnvironment>();
-        hostingEnvironment.Setup(x => x.ToAbsolute(this.globalSettings.UmbracoPath)).Returns("/umbraco");
+        hostingEnvironment.Setup(x => x.ToAbsolute(It.IsAny<string>())).Returns("/umbraco");
 
-        this.configuration = new StaticFileOptionsConfiguration(globalSettingsMock.Object, pageSpeedOptimizerOptionsMock.Object, hostingEnvironment.Object);
+        this.configuration = new StaticFileOptionsConfiguration(pageSpeedOptimizerOptionsMock.Object, hostingEnvironment.Object);
     }
 
     /// <summary>
