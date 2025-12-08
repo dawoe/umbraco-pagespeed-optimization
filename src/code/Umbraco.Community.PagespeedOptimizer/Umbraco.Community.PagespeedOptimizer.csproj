@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Umbraco.Community.PagespeedOptimizer.Infrastructure\Umbraco.Community.PagespeedOptimizer.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageTags>umbraco, umbraco-marketplace</PackageTags>
+  </PropertyGroup>
+
+</Project>

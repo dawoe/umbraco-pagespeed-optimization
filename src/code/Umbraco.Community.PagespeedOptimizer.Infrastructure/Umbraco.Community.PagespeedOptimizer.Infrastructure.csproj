@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Umbraco.Cms.Imaging.ImageSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Umbraco.Community.PagespeedOptimizer.Core\Umbraco.Community.PagespeedOptimizer.Core.csproj" />
+  </ItemGroup>
+
+</Project>
