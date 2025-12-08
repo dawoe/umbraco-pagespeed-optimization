@@ -1,0 +1,18 @@
+{
+  "AuthorDetails": {
+    "Name": "Dave Woestenborghs",
+    "Description": "Umbraco MVP, contributor and package creator from Belgium",
+    "Url": "https://github.com/dawoe",
+    "ImageUrl": "https://github.com/dawoe.png",
+    "SyncContributorsFromRepository": true
+  },
+  "Categories": "Developer Tools",
+  "DiscussionForumUrl": "",
+  "DocumentationUrl": "https://github.com/dawoe/umbraco-pagespeed-optimization/blob/develop/README.md",
+  "LicenseTypes": [ "Free" ],
+  "IssueTrackerUrl": "https://github.com/dawoe/umbraco-pagespeed-optimization/issues",
+  "PackageType": "Package",
+  "PackagesByAuthor": [ "Our.Umbraco.MultilanguageTextbox", "Dawoe.OEmbedPickerPropertyEditor" ],  
+  "Tags": [ "optimization", "images", "caching", "pagespeed" ],
+  "Title": "Pagespeed Optimizer"
+}
