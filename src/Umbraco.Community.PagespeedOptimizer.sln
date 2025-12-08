@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11222.15 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.Community.PagespeedOptimizer.Core", "code\Umbraco.Community.PagespeedOptimizer.Core\Umbraco.Community.PagespeedOptimizer.Core.csproj", "{56A46EC0-E21E-4602-8E9B-D2B7DF8456BB}"
 EndProject
@@ -21,8 +21,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.Community.PagespeedOptimizer.Infrastructure.Tests", "test\Umbraco.Community.PagespeedOptimizer.Infrastructure.Tests\Umbraco.Community.PagespeedOptimizer.Infrastructure.Tests.csproj", "{D07272EB-A5BA-4E44-A746-591ED0D12AAD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.Community.PagespeedOptimizer", "code\Umbraco.Community.PagespeedOptimizer\Umbraco.Community.PagespeedOptimizer.csproj", "{3CCD1213-BCB4-400E-A8E6-40DDEA27F630}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website-V13", "..\test-sites\Website-V13\Website-V13.csproj", "{F40418B8-8BE9-329D-9357-E7F348926C8D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -82,17 +80,6 @@ Global
 		{3CCD1213-BCB4-400E-A8E6-40DDEA27F630}.Release|x64.Build.0 = Release|Any CPU
 		{3CCD1213-BCB4-400E-A8E6-40DDEA27F630}.Release|x86.ActiveCfg = Release|Any CPU
 		{3CCD1213-BCB4-400E-A8E6-40DDEA27F630}.Release|x86.Build.0 = Release|Any CPU
-		{F40418B8-8BE9-329D-9357-E7F348926C8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F40418B8-8BE9-329D-9357-E7F348926C8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F40418B8-8BE9-329D-9357-E7F348926C8D}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F40418B8-8BE9-329D-9357-E7F348926C8D}.Debug|x64.Build.0 = Debug|Any CPU
-		{F40418B8-8BE9-329D-9357-E7F348926C8D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F40418B8-8BE9-329D-9357-E7F348926C8D}.Debug|x86.Build.0 = Debug|Any CPU
-		{F40418B8-8BE9-329D-9357-E7F348926C8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F40418B8-8BE9-329D-9357-E7F348926C8D}.Release|x64.ActiveCfg = Release|Any CPU
-		{F40418B8-8BE9-329D-9357-E7F348926C8D}.Release|x64.Build.0 = Release|Any CPU
-		{F40418B8-8BE9-329D-9357-E7F348926C8D}.Release|x86.ActiveCfg = Release|Any CPU
-		{F40418B8-8BE9-329D-9357-E7F348926C8D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
