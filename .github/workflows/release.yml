@@ -3,6 +3,9 @@
 
 name: Nuget Release
 
+on:
+  workflow_dispatch:  
+
 env:
   BUILD_CONFIG: 'Release'
   NuGetDirectory: ${{ github.workspace}}/nuget
@@ -15,7 +18,7 @@ jobs:
   build:
    
     runs-on: ubuntu-latest
-    
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v3
       
