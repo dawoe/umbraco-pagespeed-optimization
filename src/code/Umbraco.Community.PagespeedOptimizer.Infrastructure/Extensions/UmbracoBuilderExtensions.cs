@@ -2,8 +2,10 @@ using System.IO.Compression;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Umbraco.Cms.Core.DependencyInjection;
+using Umbraco.Cms.Core.Media;
 using Umbraco.Community.PagespeedOptimizer.Core.Configuration;
 using Umbraco.Community.PagespeedOptimizer.Infrastructure.OptionsConfiguration;
 
@@ -23,7 +25,8 @@ internal static class UmbracoBuilderExtensions
         builder
             .LoadConfiguration()
             .AddStaticCache()
-            .AddResponseCompression();
+            .AddResponseCompression()
+            .AddOptimizedImageUrlGenerator();
 
     private static IUmbracoBuilder LoadConfiguration(this IUmbracoBuilder builder)
     {
@@ -71,6 +74,19 @@ internal static class UmbracoBuilderExtensions
             options.Level = CompressionLevel.Optimal;
         });
 
+        return builder;
+    }
+
+    private static IUmbracoBuilder AddOptimizedImageUrlGenerator(this IUmbracoBuilder builder)
+    {
+        var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IOptions<PageSpeedOptimizerSettings>>();
+        if (configuration.Value.ImageOptimization.Enabled == false)
+        {
+            return builder;
+        }
+
+        var defaultGenerator = builder.Services.BuildServiceProvider().GetRequiredService<IImageUrlGenerator>();
+        builder.Services.Replace(ServiceDescriptor.Singleton<IImageUrlGenerator>(new OptimizedImageUrlGenerator(defaultGenerator, configuration)));
         return builder;
     }
 }

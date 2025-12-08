@@ -7,6 +7,7 @@ namespace Umbraco.Community.PagespeedOptimizer.Infrastructure;
 /// <summary>
 /// Composer for the Page Speed Optimizer infrastructure.
 /// </summary>
+[ComposeAfter(typeof(Umbraco.Cms.Imaging.ImageSharp.ImageSharpComposer))]
 internal sealed class InfrastructureComposer : IComposer
 {
     /// <inheritdoc />
