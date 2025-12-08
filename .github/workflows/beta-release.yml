@@ -5,7 +5,7 @@ name: Beta Release
 
 on:
   push:
-    branches: [ "v13/develop" ]
+    branches: [ "develop" ]
 
 env:
   BUILD_CONFIG: 'Release'
@@ -26,7 +26,7 @@ jobs:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.x'
+          dotnet-version: '10.x'
       
       - name: Restore
         run: dotnet restore 
@@ -39,19 +39,7 @@ jobs:
       - name: Test
         run: dotnet test -c ${{ env.BUILD_CONFIG }} --no-restore --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
         working-directory: src/
-                    
-      - name: ReportGenerator
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.10
-        with:
-            reports: '**/coverage.cobertura.xml'
-            targetdir: reports
-            reporttypes: MarkdownSummary;MarkdownDeltaSummary
-            sourcedirs: src
-            historydir: history      
-
-      - name: Write to Job Summary
-        run: cat reports/Summary.md >> $GITHUB_STEP_SUMMARY
-        
+                         
       - name: Pack
         run: dotnet pack -c ${{ env.BUILD_CONFIG }} --no-restore --no-build --output ${{ env.NuGetDirectory }} --version-suffix beta-${{github.run_number}}
         working-directory: src/
@@ -76,7 +64,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.x'
+          dotnet-version: '10.x'
 
       # Publish all NuGet packages to NuGet.org
       # Use --skip-duplicate to prevent errors if a package with the same version already exists.
