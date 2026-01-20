@@ -54,7 +54,8 @@ internal sealed class StaticFileOptionsConfiguration(
 
     private bool CanRequestBeCached(StaticFileResponseContext context)
     {
-        if (context.Context.Request.Path.StartsWithSegments(this.backOfficePath))
+        if (this.staticAssetsCacheSettings.CacheBackOffice == false &&
+            context.Context.Request.Path.StartsWithSegments(this.backOfficePath))
         {
             return false;
         }
@@ -73,9 +74,17 @@ internal sealed class StaticFileOptionsConfiguration(
     {
         var headers = context.Context.Response.GetTypedHeaders();
 
+        var maxAge = TimeSpan.FromDays(this.staticAssetsCacheSettings.MaxAgeInDays);
+
+        if (context.Context.Request.Path.StartsWithSegments(this.backOfficePath) &&
+            this.staticAssetsCacheSettings.CacheBackOffice)
+        {
+            maxAge = TimeSpan.FromDays(this.staticAssetsCacheSettings.MaxAgeInDaysForBackOffice);
+        }
+
         var cacheControl = headers.CacheControl ?? new CacheControlHeaderValue();
         cacheControl.Public = true;
-        cacheControl.MaxAge = TimeSpan.FromDays(this.staticAssetsCacheSettings.MaxAgeInDays);
+        cacheControl.MaxAge = maxAge;
         headers.CacheControl = cacheControl;
     }
 }
