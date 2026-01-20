@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Media;
+using Umbraco.Cms.Imaging.ImageSharp.Media;
 using Umbraco.Community.PagespeedOptimizer.Core.Configuration;
 using Umbraco.Community.PagespeedOptimizer.Infrastructure.OptionsConfiguration;
 
@@ -90,8 +91,28 @@ internal static class UmbracoBuilderExtensions
             return builder;
         }
 
-        //var defaultGenerator = builder.Services.BuildServiceProvider().GetRequiredService<IImageUrlGenerator>();
-        //builder.Services.Replace(ServiceDescriptor.Singleton<IImageUrlGenerator>(new OptimizedImageUrlGenerator(defaultGenerator, configuration)));
+        var imageUrlGenerators = builder.Services.Where(s => s.ServiceType == typeof(IImageUrlGenerator)).ToList();
+        var imageSharpGenerator = imageUrlGenerators.FirstOrDefault(s => s.ImplementationType == typeof(ImageSharpImageUrlGenerator));
+
+        if (imageSharpGenerator?.ImplementationType == null)
+        {
+            return builder;
+        }
+
+        foreach (var generator in imageUrlGenerators)
+        {
+            builder.Services.Remove(generator);
+        }
+
+        builder.Services.AddSingleton<IImageUrlGenerator>(provider =>
+        {
+            var inner = (IImageUrlGenerator)ActivatorUtilities.CreateInstance(provider, imageSharpGenerator.ImplementationType);
+
+            var options = provider.GetRequiredService<IOptions<PageSpeedOptimizerSettings>>();
+
+            return new OptimizedImageUrlGenerator(inner, options);
+        });
+
         return builder;
     }
 }
