@@ -27,4 +27,14 @@ public sealed class StaticAssetsCacheSettings
     /// </summary>
     /// <remarks>By default, js, css, svg, woff2, woff, otf, ttf, ico, jpg, png, gif and webp we are cached.</remarks>
     public ISet<string> CacheExtensions { get; set; } = DefaultCacheExtensions;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether back-office assets should be cached.
+    /// </summary>
+    public bool CacheBackOffice { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets the max-age in days for back-office assets.
+    /// </summary>
+    public int MaxAgeInDaysForBackOffice { get; set; } = 7;
 }
