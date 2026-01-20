@@ -1,11 +1,13 @@
 using System.IO.Compression;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Media;
+using Umbraco.Cms.Imaging.ImageSharp.Media;
 using Umbraco.Community.PagespeedOptimizer.Core.Configuration;
 using Umbraco.Community.PagespeedOptimizer.Infrastructure.OptionsConfiguration;
 
@@ -36,7 +38,8 @@ internal static class UmbracoBuilderExtensions
 
     private static IUmbracoBuilder AddStaticCache(this IUmbracoBuilder builder)
     {
-        var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IOptions<PageSpeedOptimizerSettings>>().Value;
+        var configuration = new PageSpeedOptimizerSettings();
+        builder.Config.GetSection(PageSpeedOptimizerSettings.SectionName).Bind(configuration);
 
         if (configuration.StaticAssetsCache.Enabled == false)
         {
@@ -50,9 +53,10 @@ internal static class UmbracoBuilderExtensions
 
     private static IUmbracoBuilder AddResponseCompression(this IUmbracoBuilder builder)
     {
-        var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IOptions<PageSpeedOptimizerSettings>>();
+        var configuration = new PageSpeedOptimizerSettings();
+        builder.Config.GetSection(PageSpeedOptimizerSettings.SectionName).Bind(configuration);
 
-        if (configuration.Value.ResponseCompression.Enabled == false)
+        if (configuration.ResponseCompression.Enabled == false)
         {
             return builder;
         }
@@ -79,14 +83,36 @@ internal static class UmbracoBuilderExtensions
 
     private static IUmbracoBuilder AddOptimizedImageUrlGenerator(this IUmbracoBuilder builder)
     {
-        var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IOptions<PageSpeedOptimizerSettings>>();
-        if (configuration.Value.ImageOptimization.Enabled == false)
+        var configuration = new PageSpeedOptimizerSettings();
+        builder.Config.GetSection(PageSpeedOptimizerSettings.SectionName).Bind(configuration);
+
+        if (configuration.ImageOptimization.Enabled == false)
         {
             return builder;
         }
 
-        var defaultGenerator = builder.Services.BuildServiceProvider().GetRequiredService<IImageUrlGenerator>();
-        builder.Services.Replace(ServiceDescriptor.Singleton<IImageUrlGenerator>(new OptimizedImageUrlGenerator(defaultGenerator, configuration)));
+        var imageUrlGenerators = builder.Services.Where(s => s.ServiceType == typeof(IImageUrlGenerator)).ToList();
+        var imageSharpGenerator = imageUrlGenerators.FirstOrDefault(s => s.ImplementationType == typeof(ImageSharpImageUrlGenerator));
+
+        if (imageSharpGenerator?.ImplementationType == null)
+        {
+            return builder;
+        }
+
+        foreach (var generator in imageUrlGenerators)
+        {
+            builder.Services.Remove(generator);
+        }
+
+        builder.Services.AddSingleton<IImageUrlGenerator>(provider =>
+        {
+            var inner = (IImageUrlGenerator)ActivatorUtilities.CreateInstance(provider, imageSharpGenerator.ImplementationType);
+
+            var options = provider.GetRequiredService<IOptions<PageSpeedOptimizerSettings>>();
+
+            return new OptimizedImageUrlGenerator(inner, options);
+        });
+
         return builder;
     }
 }
