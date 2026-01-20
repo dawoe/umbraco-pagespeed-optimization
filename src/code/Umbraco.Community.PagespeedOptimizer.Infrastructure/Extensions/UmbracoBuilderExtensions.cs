@@ -1,6 +1,7 @@
 using System.IO.Compression;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -36,7 +37,8 @@ internal static class UmbracoBuilderExtensions
 
     private static IUmbracoBuilder AddStaticCache(this IUmbracoBuilder builder)
     {
-        var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IOptions<PageSpeedOptimizerSettings>>().Value;
+        var configuration = new PageSpeedOptimizerSettings();
+        builder.Config.GetSection(PageSpeedOptimizerSettings.SectionName).Bind(configuration);
 
         if (configuration.StaticAssetsCache.Enabled == false)
         {
@@ -50,9 +52,10 @@ internal static class UmbracoBuilderExtensions
 
     private static IUmbracoBuilder AddResponseCompression(this IUmbracoBuilder builder)
     {
-        var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IOptions<PageSpeedOptimizerSettings>>();
+        var configuration = new PageSpeedOptimizerSettings();
+        builder.Config.GetSection(PageSpeedOptimizerSettings.SectionName).Bind(configuration);
 
-        if (configuration.Value.ResponseCompression.Enabled == false)
+        if (configuration.ResponseCompression.Enabled == false)
         {
             return builder;
         }
@@ -79,14 +82,16 @@ internal static class UmbracoBuilderExtensions
 
     private static IUmbracoBuilder AddOptimizedImageUrlGenerator(this IUmbracoBuilder builder)
     {
-        var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IOptions<PageSpeedOptimizerSettings>>();
-        if (configuration.Value.ImageOptimization.Enabled == false)
+        var configuration = new PageSpeedOptimizerSettings();
+        builder.Config.GetSection(PageSpeedOptimizerSettings.SectionName).Bind(configuration);
+
+        if (configuration.ImageOptimization.Enabled == false)
         {
             return builder;
         }
 
-        var defaultGenerator = builder.Services.BuildServiceProvider().GetRequiredService<IImageUrlGenerator>();
-        builder.Services.Replace(ServiceDescriptor.Singleton<IImageUrlGenerator>(new OptimizedImageUrlGenerator(defaultGenerator, configuration)));
+        //var defaultGenerator = builder.Services.BuildServiceProvider().GetRequiredService<IImageUrlGenerator>();
+        //builder.Services.Replace(ServiceDescriptor.Singleton<IImageUrlGenerator>(new OptimizedImageUrlGenerator(defaultGenerator, configuration)));
         return builder;
     }
 }
