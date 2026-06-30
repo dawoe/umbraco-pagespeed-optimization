@@ -11,6 +11,10 @@
     <PackageReference Include="clean" Version="7.0.1" />
     <PackageReference Include="Umbraco.Cms" Version="17.0.1" />
 	<PackageReference Include="Umbraco.Cms.DevelopmentMode.Backoffice" Version="17.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
