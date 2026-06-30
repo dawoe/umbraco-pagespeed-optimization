@@ -1,15 +1,22 @@
 using System.IO.Compression;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Media;
+using Umbraco.Cms.Core.Notifications;
 using Umbraco.Cms.Imaging.ImageSharp.Media;
 using Umbraco.Community.PagespeedOptimizer.Core.Configuration;
+using Umbraco.Community.PagespeedOptimizer.Core.Repositories;
 using Umbraco.Community.PagespeedOptimizer.Infrastructure.OptionsConfiguration;
+using Umbraco.Community.PagespeedOptimizer.Infrastructure.Persistence;
+using Umbraco.Community.PagespeedOptimizer.Infrastructure.Persistence.Notifications;
+using Umbraco.Community.PagespeedOptimizer.Infrastructure.Persistence.Repositories;
+using Umbraco.Extensions;
 
 namespace Umbraco.Community.PagespeedOptimizer.Infrastructure.Extensions;
 
@@ -28,7 +35,8 @@ internal static class UmbracoBuilderExtensions
             .LoadConfiguration()
             .AddStaticCache()
             .AddResponseCompression()
-            .AddOptimizedImageUrlGenerator();
+            .AddOptimizedImageUrlGenerator()
+            .AddMediaExceptionPersistence();
 
     private static IUmbracoBuilder LoadConfiguration(this IUmbracoBuilder builder)
     {
@@ -112,6 +120,29 @@ internal static class UmbracoBuilderExtensions
 
             return new OptimizedImageUrlGenerator(inner, options);
         });
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Registers persistence services for media exceptions, including the DbContext, repository, and migration notification handler.
+    /// </summary>
+    /// <param name="builder">A <see cref="IUmbracoBuilder"/>.</param>
+    /// <returns>Updated <see cref="IUmbracoBuilder"/>.</returns>
+    private static IUmbracoBuilder AddMediaExceptionPersistence(this IUmbracoBuilder builder)
+    {
+        builder.Services.AddUmbracoDbContext<PageSpeedOptimizerDbContext>(
+            (_, optionsBuilder, connectionString, providerName) =>
+            {
+                if (connectionString is not null && providerName is not null)
+                {
+                    optionsBuilder.UseDatabaseProvider(providerName, connectionString);
+                }
+            });
+
+        builder.Services.AddScoped<IMediaExceptionRepository, MediaExceptionRepository>();
+
+        builder.AddNotificationAsyncHandler<UmbracoApplicationStartedNotification, RunMediaExceptionsMigration>();
 
         return builder;
     }
