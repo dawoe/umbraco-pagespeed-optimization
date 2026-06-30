@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Umbraco.Cms.Persistence.EFCore.Scoping;
 using Umbraco.Community.PagespeedOptimizer.Core.Models;
 using Umbraco.Community.PagespeedOptimizer.Core.Repositories;
-using Umbraco.Community.PagespeedOptimizer.Infrastructure.Persistence;
 
 namespace Umbraco.Community.PagespeedOptimizer.Infrastructure.Persistence.Repositories;
 
@@ -13,21 +12,21 @@ namespace Umbraco.Community.PagespeedOptimizer.Infrastructure.Persistence.Reposi
 /// </summary>
 internal sealed class MediaExceptionRepository : IMediaExceptionRepository
 {
-    private readonly IEFCoreScopeProvider<PageSpeedOptimizerDbContext> _scopeProvider;
+    private readonly IEFCoreScopeProvider<PageSpeedOptimizerDbContext> scopeProvider;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MediaExceptionRepository"/> class.
     /// </summary>
     /// <param name="scopeProvider">The EF Core scope provider.</param>
     public MediaExceptionRepository(IEFCoreScopeProvider<PageSpeedOptimizerDbContext> scopeProvider)
-        => _scopeProvider = scopeProvider;
+        => this.scopeProvider = scopeProvider;
 
     /// <inheritdoc />
     public async Task<MediaException?> GetAsync(Guid id, CancellationToken ct = default)
     {
-        using IEfCoreScope<PageSpeedOptimizerDbContext> scope = _scopeProvider.CreateScope();
+        using var scope = this.scopeProvider.CreateScope();
 
-        MediaException? result = await scope.ExecuteWithContextAsync(
+        var result = await scope.ExecuteWithContextAsync(
             async (PageSpeedOptimizerDbContext db) => await db.MediaExceptions.FindAsync([id], ct));
 
         scope.Complete();
@@ -38,10 +37,10 @@ internal sealed class MediaExceptionRepository : IMediaExceptionRepository
     /// <inheritdoc />
     public async Task<IEnumerable<MediaException>> GetAllAsync(CancellationToken ct = default)
     {
-        using IEfCoreScope<PageSpeedOptimizerDbContext> scope = _scopeProvider.CreateScope();
+        using var scope = this.scopeProvider.CreateScope();
 
-        List<MediaException> result = await scope.ExecuteWithContextAsync(
-            async (PageSpeedOptimizerDbContext db) => await db.MediaExceptions.ToListAsync(ct));
+        var result = await scope.ExecuteWithContextAsync(
+            async db => await db.MediaExceptions.ToListAsync(ct));
 
         scope.Complete();
 
@@ -51,9 +50,9 @@ internal sealed class MediaExceptionRepository : IMediaExceptionRepository
     /// <inheritdoc />
     public async Task<MediaException> CreateAsync(MediaException entity, CancellationToken ct = default)
     {
-        using IEfCoreScope<PageSpeedOptimizerDbContext> scope = _scopeProvider.CreateScope();
+        using var scope = this.scopeProvider.CreateScope();
 
-        MediaException result = await scope.ExecuteWithContextAsync(async (PageSpeedOptimizerDbContext db) =>
+        var result = await scope.ExecuteWithContextAsync(async (PageSpeedOptimizerDbContext db) =>
         {
             db.MediaExceptions.Add(entity);
             await db.SaveChangesAsync(ct);
@@ -68,9 +67,9 @@ internal sealed class MediaExceptionRepository : IMediaExceptionRepository
     /// <inheritdoc />
     public async Task<MediaException> UpdateAsync(MediaException entity, CancellationToken ct = default)
     {
-        using IEfCoreScope<PageSpeedOptimizerDbContext> scope = _scopeProvider.CreateScope();
+        using var scope = this.scopeProvider.CreateScope();
 
-        MediaException result = await scope.ExecuteWithContextAsync(async (PageSpeedOptimizerDbContext db) =>
+        var result = await scope.ExecuteWithContextAsync(async (PageSpeedOptimizerDbContext db) =>
         {
             db.MediaExceptions.Update(entity);
             await db.SaveChangesAsync(ct);
@@ -85,10 +84,10 @@ internal sealed class MediaExceptionRepository : IMediaExceptionRepository
     /// <inheritdoc />
     public async Task<MediaException?> GetByMediaKeyAsync(Guid mediaKey, CancellationToken ct = default)
     {
-        using IEfCoreScope<PageSpeedOptimizerDbContext> scope = _scopeProvider.CreateScope();
+        using var scope = this.scopeProvider.CreateScope();
 
-        MediaException? result = await scope.ExecuteWithContextAsync(
-            async (PageSpeedOptimizerDbContext db) => await db.MediaExceptions.FirstOrDefaultAsync(x => x.MediaKey == mediaKey, ct));
+        var result = await scope.ExecuteWithContextAsync(
+            async db => await db.MediaExceptions.FirstOrDefaultAsync(x => x.MediaKey == mediaKey, ct));
 
         scope.Complete();
 
@@ -98,11 +97,11 @@ internal sealed class MediaExceptionRepository : IMediaExceptionRepository
     /// <inheritdoc />
     public async Task DeleteAsync(Guid id, CancellationToken ct = default)
     {
-        using IEfCoreScope<PageSpeedOptimizerDbContext> scope = _scopeProvider.CreateScope();
+        using var scope = this.scopeProvider.CreateScope();
 
         await scope.ExecuteWithContextAsync<Task>(async (PageSpeedOptimizerDbContext db) =>
         {
-            MediaException? entity = await db.MediaExceptions.FindAsync([id], ct);
+            var entity = await db.MediaExceptions.FindAsync([id], ct);
 
             if (entity is not null)
             {

@@ -25,8 +25,7 @@ internal sealed class PageSpeedOptimizerDbContext : DbContext
     public DbSet<MediaException> MediaExceptions { get; set; }
 
     /// <inheritdoc />
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
+    protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder.Entity<MediaException>(entity =>
         {
             entity.ToTable("PageSpeedOptimizer_MediaExceptions");
@@ -37,5 +36,4 @@ internal sealed class PageSpeedOptimizerDbContext : DbContext
             entity.Property(e => e.Quality).IsRequired();
             entity.Property(e => e.ForceWebp).IsRequired();
         });
-    }
 }

@@ -132,7 +132,7 @@ internal static class UmbracoBuilderExtensions
     private static IUmbracoBuilder AddMediaExceptionPersistence(this IUmbracoBuilder builder)
     {
         builder.Services.AddUmbracoDbContext<PageSpeedOptimizerDbContext>(
-            (IServiceProvider serviceProvider, DbContextOptionsBuilder optionsBuilder, string? connectionString, string? providerName) =>
+            (_, optionsBuilder, connectionString, providerName) =>
             {
                 if (connectionString is not null && providerName is not null)
                 {
