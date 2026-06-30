@@ -83,6 +83,19 @@ internal sealed class MediaExceptionRepository : IMediaExceptionRepository
     }
 
     /// <inheritdoc />
+    public async Task<MediaException?> GetByMediaKeyAsync(Guid mediaKey, CancellationToken ct = default)
+    {
+        using IEfCoreScope<PageSpeedOptimizerDbContext> scope = _scopeProvider.CreateScope();
+
+        MediaException? result = await scope.ExecuteWithContextAsync(
+            async (PageSpeedOptimizerDbContext db) => await db.MediaExceptions.FirstOrDefaultAsync(x => x.MediaKey == mediaKey, ct));
+
+        scope.Complete();
+
+        return result;
+    }
+
+    /// <inheritdoc />
     public async Task DeleteAsync(Guid id, CancellationToken ct = default)
     {
         using IEfCoreScope<PageSpeedOptimizerDbContext> scope = _scopeProvider.CreateScope();

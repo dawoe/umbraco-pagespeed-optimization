@@ -41,6 +41,14 @@ public interface IMediaExceptionRepository
     Task<MediaException> UpdateAsync(MediaException entity, CancellationToken ct = default);
 
     /// <summary>
+    /// Gets a <see cref="MediaException"/> by its media key.
+    /// </summary>
+    /// <param name="mediaKey">The media key.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>The entity, or <c>null</c> if not found.</returns>
+    Task<MediaException?> GetByMediaKeyAsync(Guid mediaKey, CancellationToken ct = default);
+
+    /// <summary>
     /// Deletes a <see cref="MediaException"/> by its identifier.
     /// </summary>
     /// <param name="id">The unique identifier of the entity to delete.</param>
