@@ -21,7 +21,7 @@ namespace Umbraco.Community.PagespeedOptimizer.BackOffice.Controllers;
 [Authorize(Policy = AuthorizationPolicies.SectionAccessMedia)]
 [MapToApi("pagespeed-optimizer-management-api")]
 [ApiExplorerSettings(GroupName = "pagespeed-optimizer-management-api")]
-public class MediaExceptionManagementApiController : ManagementApiControllerBase
+public sealed class MediaExceptionManagementApiController : ManagementApiControllerBase
 {
     private readonly IMediaExceptionRepository _repository;
     private readonly IOptions<PageSpeedOptimizerSettings> _settings;
@@ -44,11 +44,18 @@ public class MediaExceptionManagementApiController : ManagementApiControllerBase
     /// </summary>
     /// <param name="request">The create request.</param>
     /// <param name="ct">Cancellation token.</param>
-    /// <returns>The created media exception with a 201 Created response.</returns>
+    /// <returns>The created media exception with a 201 Created response, or 409 Conflict if an exception already exists for the given media key.</returns>
     [HttpPost]
     [ProducesResponseType(typeof(MediaExceptionResponseModel), StatusCodes.Status201Created)]
-    public async Task<IActionResult> CreateMediaException(CreateMediaExceptionRequestModel request, CancellationToken ct)
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> CreateMediaException([FromBody] CreateMediaExceptionRequestModel request, CancellationToken ct)
     {
+        var existing = await _repository.GetByMediaKeyAsync(request.MediaKey, ct);
+        if (existing is not null)
+        {
+            return Conflict();
+        }
+
         var entity = new MediaException
         {
             Id = Guid.NewGuid(),
@@ -58,7 +65,7 @@ public class MediaExceptionManagementApiController : ManagementApiControllerBase
         };
 
         var created = await _repository.CreateAsync(entity, ct);
-        return Created(string.Empty, MapToResponseModel(created));
+        return Created($"umbraco/management/api/v1/pagespeed-optimizer/media-exception/{created.Id}", MapToResponseModel(created));
     }
 
     /// <summary>
@@ -71,7 +78,7 @@ public class MediaExceptionManagementApiController : ManagementApiControllerBase
     [HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(MediaExceptionResponseModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateMediaException(Guid id, UpdateMediaExceptionRequestModel request, CancellationToken ct)
+    public async Task<IActionResult> UpdateMediaException(Guid id, [FromBody] UpdateMediaExceptionRequestModel request, CancellationToken ct)
     {
         var existing = await _repository.GetAsync(id, ct);
         if (existing is null)
@@ -123,6 +130,9 @@ public class MediaExceptionManagementApiController : ManagementApiControllerBase
         });
     }
 
+    /// <summary>
+    /// Maps a <see cref="MediaException"/> entity to a <see cref="MediaExceptionResponseModel"/>.
+    /// </summary>
     private static MediaExceptionResponseModel MapToResponseModel(MediaException entity) =>
         new()
         {

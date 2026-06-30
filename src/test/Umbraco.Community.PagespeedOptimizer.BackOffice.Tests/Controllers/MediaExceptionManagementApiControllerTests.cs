@@ -43,6 +43,10 @@ internal sealed class MediaExceptionManagementApiControllerTests
         var request = new CreateMediaExceptionRequestModel { MediaKey = mediaKey, Quality = 75, ForceWebp = true };
 
         _repositoryMock
+            .Setup(r => r.GetByMediaKeyAsync(mediaKey, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((MediaException?)null);
+
+        _repositoryMock
             .Setup(r => r.CreateAsync(It.IsAny<MediaException>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((MediaException e, CancellationToken _) => e);
 
@@ -60,6 +64,25 @@ internal sealed class MediaExceptionManagementApiControllerTests
             Assert.That(response.Quality, Is.EqualTo(75));
             Assert.That(response.ForceWebp, Is.True);
         });
+    }
+
+    /// <summary>
+    /// Tests that <see cref="MediaExceptionManagementApiController.CreateMediaException"/> returns 409 Conflict when a media exception already exists for the given media key.
+    /// </summary>
+    [Test]
+    public async Task CreateMediaException_Returns_409_When_MediaKey_Already_Exists()
+    {
+        var mediaKey = Guid.NewGuid();
+        var request = new CreateMediaExceptionRequestModel { MediaKey = mediaKey, Quality = 75, ForceWebp = true };
+        var existing = new MediaException { Id = Guid.NewGuid(), MediaKey = mediaKey, Quality = 75, ForceWebp = true };
+
+        _repositoryMock
+            .Setup(r => r.GetByMediaKeyAsync(mediaKey, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(existing);
+
+        var result = await _controller.CreateMediaException(request, CancellationToken.None);
+
+        Assert.That(result, Is.InstanceOf<ConflictResult>());
     }
 
     /// <summary>
