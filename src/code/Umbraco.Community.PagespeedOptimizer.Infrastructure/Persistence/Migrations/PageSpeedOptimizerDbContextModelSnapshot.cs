@@ -21,17 +21,13 @@ namespace Umbraco.Community.PagespeedOptimizer.Infrastructure.Persistence.Migrat
             modelBuilder.Entity("Umbraco.Community.PagespeedOptimizer.Core.Models.MediaException", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<bool>("ForceWebp")
-                        .HasColumnType("INTEGER");
+                    b.Property<bool>("ForceWebp");
 
-                    b.Property<Guid>("MediaKey")
-                        .HasColumnType("TEXT");
+                    b.Property<Guid>("MediaKey");
 
-                    b.Property<int>("Quality")
-                        .HasColumnType("INTEGER");
+                    b.Property<int>("Quality");
 
                     b.HasKey("Id");
 

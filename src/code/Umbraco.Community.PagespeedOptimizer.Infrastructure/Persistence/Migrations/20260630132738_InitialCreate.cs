@@ -17,10 +17,10 @@ namespace Umbraco.Community.PagespeedOptimizer.Infrastructure.Persistence.Migrat
                 name: "PageSpeedOptimizer_MediaExceptions",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    MediaKey = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Quality = table.Column<int>(type: "INTEGER", nullable: false),
-                    ForceWebp = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Id = table.Column<Guid>(nullable: false),
+                    MediaKey = table.Column<Guid>(nullable: false),
+                    Quality = table.Column<int>(nullable: false),
+                    ForceWebp = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
