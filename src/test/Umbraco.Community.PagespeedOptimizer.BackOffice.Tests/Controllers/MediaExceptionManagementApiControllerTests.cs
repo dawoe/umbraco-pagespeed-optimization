@@ -159,6 +159,46 @@ internal sealed class MediaExceptionManagementApiControllerTests
     }
 
     /// <summary>
+    /// Tests that <see cref="MediaExceptionManagementApiController.GetByMediaKey"/> returns 200 OK with the response model when a media exception exists for the given media key.
+    /// </summary>
+    [Test]
+    public async Task GetByMediaKey_Returns_200_With_ResponseModel_When_Found()
+    {
+        var mediaKey = Guid.NewGuid();
+        var existing = new MediaException { Id = Guid.NewGuid(), MediaKey = mediaKey, Quality = 80, ForceWebp = true };
+
+        this.repositoryMock.Setup(r => r.GetByMediaKeyAsync(mediaKey, It.IsAny<CancellationToken>())).ReturnsAsync(existing);
+
+        var result = await this.controller.GetByMediaKey(mediaKey, CancellationToken.None);
+
+        var ok = result as OkObjectResult;
+        Assert.That(ok, Is.Not.Null);
+
+        var response = ok!.Value as MediaExceptionResponseModel;
+        Assert.Multiple(() =>
+        {
+            Assert.That(response, Is.Not.Null);
+            Assert.That(response!.Id, Is.EqualTo(existing.Id));
+            Assert.That(response.MediaKey, Is.EqualTo(mediaKey));
+            Assert.That(response.Quality, Is.EqualTo(80));
+            Assert.That(response.ForceWebp, Is.True);
+        });
+    }
+
+    /// <summary>
+    /// Tests that <see cref="MediaExceptionManagementApiController.GetByMediaKey"/> returns 404 when no media exception exists for the given media key.
+    /// </summary>
+    [Test]
+    public async Task GetByMediaKey_Returns_404_When_Not_Found()
+    {
+        this.repositoryMock.Setup(r => r.GetByMediaKeyAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((MediaException?)null);
+
+        var result = await this.controller.GetByMediaKey(Guid.NewGuid(), CancellationToken.None);
+
+        Assert.That(result, Is.InstanceOf<NotFoundResult>());
+    }
+
+    /// <summary>
     /// Tests that <see cref="MediaExceptionManagementApiController.GetDefaultValues"/> returns 200 OK with the values from settings.
     /// </summary>
     [Test]

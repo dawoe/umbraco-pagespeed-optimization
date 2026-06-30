@@ -117,6 +117,26 @@ public sealed class MediaExceptionManagementApiController : ManagementApiControl
     }
 
     /// <summary>
+    /// Gets a media exception by its media key.
+    /// </summary>
+    /// <param name="mediaKey">The Umbraco media item key.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>The media exception, or 404 Not Found if no exception exists for the given media key.</returns>
+    [HttpGet("by-media-key/{mediaKey:guid}")]
+    [ProducesResponseType(typeof(MediaExceptionResponseModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetByMediaKey(Guid mediaKey, CancellationToken ct)
+    {
+        var existing = await this.repository.GetByMediaKeyAsync(mediaKey, ct);
+        if (existing is null)
+        {
+            return this.NotFound();
+        }
+
+        return this.Ok(MapToResponseModel(existing));
+    }
+
+    /// <summary>
     /// Gets the default image quality and ForceWebP values from global application settings.
     /// </summary>
     /// <returns>The default values from <see cref="ImageOptimizationSettings"/>.</returns>
