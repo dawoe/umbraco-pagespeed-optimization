@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 This is a NuGet package for Umbraco CMS (v17.x, targeting .NET 10) that provides three page speed optimizations:
+
 - **Static asset caching** — cache-control headers for browser caching
 - **Image optimization** — quality/format conversion with WebP support
 - **Response compression** — Gzip/Brotli via ASP.NET Core middleware
@@ -16,9 +17,11 @@ src/
 ├── code/
 │   ├── Umbraco.Community.PagespeedOptimizer/          # Entry point, WebApplication extensions
 │   ├── Umbraco.Community.PagespeedOptimizer.Core/     # Configuration POCOs
-│   └── Umbraco.Community.PagespeedOptimizer.Infrastructure/  # Composers, middleware, URL generators
+│   ├── Umbraco.Community.PagespeedOptimizer.Infrastructure/  # Composers, middleware, URL generators
+│   └── Umbraco.Community.PagespeedOptimizer.BackOffice/      # Razor class library for back-office UI
 ├── test/
-│   └── Umbraco.Community.PagespeedOptimizer.Infrastructure.Tests/
+│   ├── Umbraco.Community.PagespeedOptimizer.Infrastructure.Tests/
+│   └── Umbraco.Community.PagespeedOptimizer.BackOffice.Tests/
 └── Directory.Packages.props   # Central package version management
 ```
 
@@ -44,6 +47,7 @@ dotnet pack -c Release --no-restore --no-build src/
 ## Code Style
 
 StyleCop.Analyzers is enforced with warnings-as-errors. Key rules from `src/stylecop.json`:
+
 - `using` directives go **inside** the namespace
 - XML documentation comments are required on public members
 - All files must have a copyright header
@@ -54,8 +58,9 @@ StyleCop.Analyzers is enforced with warnings-as-errors. Key rules from `src/styl
 - **`InfrastructureComposer`** is the Umbraco composer that wires up all three features via `IUmbracoBuilder` extensions in `UmbracoBuilderExtensions.cs`.
 - **`WebApplicationExtensions`** exposes the `UsePageSpeedOptimizer()` extension called in `Program.cs` of the consuming site.
 - **`StaticFileOptionsConfiguration`** configures cache headers on static files via `IPostConfigureOptions<StaticFileOptions>`.
-- **`OptimizedImageUrlGenerator`** wraps Umbraco's `IImageUrlGenerator` to inject quality/format parameters.
-- All features are independently toggled and configured via `appsettings.json` under the `PageSpeedOptimizer` key.
+- **`OptimizedImageUrlGenerator`** wraps Umbraco's `IImageUrlGenerator` to inject quality/format parameters (decorator pattern).
+- All features are independently toggled and configured via `appsettings.json` under the `Umbraco:Community:PageSpeedOptimizer` key.
+- **`BackOffice` project** is a Razor class library (`Microsoft.NET.Sdk.Razor`) that will host back-office UI for managing the optimizer settings from within the Umbraco admin panel.
 
 ## Test Site
 
