@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Umbraco.Cms.Api.Common.Attributes;
 using Umbraco.Cms.Api.Management.Controllers;
 using Umbraco.Cms.Web.Common.Authorization;
+using Umbraco.Cms.Web.Common.Routing;
 using Umbraco.Community.PagespeedOptimizer.BackOffice.Models;
 using Umbraco.Community.PagespeedOptimizer.Core.Configuration;
 using Umbraco.Community.PagespeedOptimizer.Core.Models;
@@ -17,14 +18,15 @@ namespace Umbraco.Community.PagespeedOptimizer.BackOffice.Controllers;
 /// <summary>
 /// Management API controller for creating, updating, and deleting media exceptions, and for reading global image optimization defaults.
 /// </summary>
-[Route("umbraco/management/api/v1/pagespeed-optimizer/media-exception")]
+[ApiController]
+[BackOfficeRoute("pagespeed-optimizer/v{version:apiVersion}/media-exception")]
 [Authorize(Policy = AuthorizationPolicies.SectionAccessMedia)]
-[MapToApi("pagespeed-optimizer-management-api")]
-[ApiExplorerSettings(GroupName = "pagespeed-optimizer-management-api")]
+[MapToApi(Constants.ApiName)]
+[ApiExplorerSettings(GroupName = "Page Speed Optimizer")]
 public sealed class MediaExceptionManagementApiController : ManagementApiControllerBase
 {
-    private readonly IMediaExceptionRepository _repository;
-    private readonly IOptions<PageSpeedOptimizerSettings> _settings;
+    private readonly IMediaExceptionRepository repository;
+    private readonly IOptions<PageSpeedOptimizerSettings> settings;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MediaExceptionManagementApiController"/> class.
@@ -35,8 +37,8 @@ public sealed class MediaExceptionManagementApiController : ManagementApiControl
         IMediaExceptionRepository repository,
         IOptions<PageSpeedOptimizerSettings> settings)
     {
-        _repository = repository;
-        _settings = settings;
+        this.repository = repository;
+        this.settings = settings;
     }
 
     /// <summary>
@@ -50,10 +52,10 @@ public sealed class MediaExceptionManagementApiController : ManagementApiControl
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> CreateMediaException([FromBody] CreateMediaExceptionRequestModel request, CancellationToken ct)
     {
-        var existing = await _repository.GetByMediaKeyAsync(request.MediaKey, ct);
+        var existing = await this.repository.GetByMediaKeyAsync(request.MediaKey, ct);
         if (existing is not null)
         {
-            return Conflict();
+            return this.Conflict();
         }
 
         var entity = new MediaException
@@ -64,8 +66,8 @@ public sealed class MediaExceptionManagementApiController : ManagementApiControl
             ForceWebp = request.ForceWebp,
         };
 
-        var created = await _repository.CreateAsync(entity, ct);
-        return Created($"umbraco/management/api/v1/pagespeed-optimizer/media-exception/{created.Id}", MapToResponseModel(created));
+        var created = await this.repository.CreateAsync(entity, ct);
+        return this.Created($"/media-exception/{created.Id}", MapToResponseModel(created));
     }
 
     /// <summary>
@@ -80,17 +82,17 @@ public sealed class MediaExceptionManagementApiController : ManagementApiControl
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateMediaException(Guid id, [FromBody] UpdateMediaExceptionRequestModel request, CancellationToken ct)
     {
-        var existing = await _repository.GetAsync(id, ct);
+        var existing = await this.repository.GetAsync(id, ct);
         if (existing is null)
         {
-            return NotFound();
+            return this.NotFound();
         }
 
         existing.Quality = request.Quality;
         existing.ForceWebp = request.ForceWebp;
 
-        var updated = await _repository.UpdateAsync(existing, ct);
-        return Ok(MapToResponseModel(updated));
+        var updated = await this.repository.UpdateAsync(existing, ct);
+        return this.Ok(MapToResponseModel(updated));
     }
 
     /// <summary>
@@ -104,14 +106,14 @@ public sealed class MediaExceptionManagementApiController : ManagementApiControl
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteMediaException(Guid id, CancellationToken ct)
     {
-        var existing = await _repository.GetAsync(id, ct);
+        var existing = await this.repository.GetAsync(id, ct);
         if (existing is null)
         {
-            return NotFound();
+            return this.NotFound();
         }
 
-        await _repository.DeleteAsync(id, ct);
-        return Ok();
+        await this.repository.DeleteAsync(id, ct);
+        return this.Ok();
     }
 
     /// <summary>
@@ -122,8 +124,8 @@ public sealed class MediaExceptionManagementApiController : ManagementApiControl
     [ProducesResponseType(typeof(DefaultValuesResponseModel), StatusCodes.Status200OK)]
     public IActionResult GetDefaultValues()
     {
-        var imageSettings = _settings.Value.ImageOptimization;
-        return Ok(new DefaultValuesResponseModel
+        var imageSettings = this.settings.Value.ImageOptimization;
+        return this.Ok(new DefaultValuesResponseModel
         {
             DefaultImageQuality = imageSettings.DefaultImageQuality,
             ForceWebP = imageSettings.ForceWebP,

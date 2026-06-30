@@ -17,9 +17,9 @@ namespace Umbraco.Community.PagespeedOptimizer.BackOffice.Tests.Controllers;
 [TestFixture]
 internal sealed class MediaExceptionManagementApiControllerTests
 {
-    private Mock<IMediaExceptionRepository> _repositoryMock = null!;
-    private Mock<IOptions<PageSpeedOptimizerSettings>> _settingsMock = null!;
-    private MediaExceptionManagementApiController _controller = null!;
+    private Mock<IMediaExceptionRepository> repositoryMock = null!;
+    private Mock<IOptions<PageSpeedOptimizerSettings>> settingsMock = null!;
+    private MediaExceptionManagementApiController controller = null!;
 
     /// <summary>
     /// Sets up a fresh controller with mocked dependencies before each test.
@@ -27,10 +27,10 @@ internal sealed class MediaExceptionManagementApiControllerTests
     [SetUp]
     public void SetUp()
     {
-        _repositoryMock = new Mock<IMediaExceptionRepository>();
-        _settingsMock = new Mock<IOptions<PageSpeedOptimizerSettings>>();
-        _settingsMock.Setup(s => s.Value).Returns(new PageSpeedOptimizerSettings());
-        _controller = new MediaExceptionManagementApiController(_repositoryMock.Object, _settingsMock.Object);
+        this.repositoryMock = new Mock<IMediaExceptionRepository>();
+        this.settingsMock = new Mock<IOptions<PageSpeedOptimizerSettings>>();
+        this.settingsMock.Setup(s => s.Value).Returns(new PageSpeedOptimizerSettings());
+        this.controller = new MediaExceptionManagementApiController(this.repositoryMock.Object, this.settingsMock.Object);
     }
 
     /// <summary>
@@ -42,15 +42,15 @@ internal sealed class MediaExceptionManagementApiControllerTests
         var mediaKey = Guid.NewGuid();
         var request = new CreateMediaExceptionRequestModel { MediaKey = mediaKey, Quality = 75, ForceWebp = true };
 
-        _repositoryMock
+        this.repositoryMock
             .Setup(r => r.GetByMediaKeyAsync(mediaKey, It.IsAny<CancellationToken>()))
             .ReturnsAsync((MediaException?)null);
 
-        _repositoryMock
+        this.repositoryMock
             .Setup(r => r.CreateAsync(It.IsAny<MediaException>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((MediaException e, CancellationToken _) => e);
 
-        var result = await _controller.CreateMediaException(request, CancellationToken.None);
+        var result = await this.controller.CreateMediaException(request, CancellationToken.None);
 
         var created = result as CreatedResult;
         Assert.That(created, Is.Not.Null);
@@ -76,11 +76,11 @@ internal sealed class MediaExceptionManagementApiControllerTests
         var request = new CreateMediaExceptionRequestModel { MediaKey = mediaKey, Quality = 75, ForceWebp = true };
         var existing = new MediaException { Id = Guid.NewGuid(), MediaKey = mediaKey, Quality = 75, ForceWebp = true };
 
-        _repositoryMock
+        this.repositoryMock
             .Setup(r => r.GetByMediaKeyAsync(mediaKey, It.IsAny<CancellationToken>()))
             .ReturnsAsync(existing);
 
-        var result = await _controller.CreateMediaException(request, CancellationToken.None);
+        var result = await this.controller.CreateMediaException(request, CancellationToken.None);
 
         Assert.That(result, Is.InstanceOf<ConflictResult>());
     }
@@ -95,12 +95,12 @@ internal sealed class MediaExceptionManagementApiControllerTests
         var existing = new MediaException { Id = id, MediaKey = Guid.NewGuid(), Quality = 85, ForceWebp = false };
         var request = new UpdateMediaExceptionRequestModel { Quality = 60, ForceWebp = true };
 
-        _repositoryMock.Setup(r => r.GetAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(existing);
-        _repositoryMock
+        this.repositoryMock.Setup(r => r.GetAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(existing);
+        this.repositoryMock
             .Setup(r => r.UpdateAsync(It.IsAny<MediaException>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((MediaException e, CancellationToken _) => e);
 
-        var result = await _controller.UpdateMediaException(id, request, CancellationToken.None);
+        var result = await this.controller.UpdateMediaException(id, request, CancellationToken.None);
 
         var ok = result as OkObjectResult;
         Assert.That(ok, Is.Not.Null);
@@ -121,9 +121,9 @@ internal sealed class MediaExceptionManagementApiControllerTests
     [Test]
     public async Task UpdateMediaException_Returns_404_When_Not_Found()
     {
-        _repositoryMock.Setup(r => r.GetAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((MediaException?)null);
+        this.repositoryMock.Setup(r => r.GetAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((MediaException?)null);
 
-        var result = await _controller.UpdateMediaException(Guid.NewGuid(), new UpdateMediaExceptionRequestModel { Quality = 80, ForceWebp = false }, CancellationToken.None);
+        var result = await this.controller.UpdateMediaException(Guid.NewGuid(), new UpdateMediaExceptionRequestModel { Quality = 80, ForceWebp = false }, CancellationToken.None);
 
         Assert.That(result, Is.InstanceOf<NotFoundResult>());
     }
@@ -137,10 +137,10 @@ internal sealed class MediaExceptionManagementApiControllerTests
         var id = Guid.NewGuid();
         var existing = new MediaException { Id = id, MediaKey = Guid.NewGuid(), Quality = 85, ForceWebp = false };
 
-        _repositoryMock.Setup(r => r.GetAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(existing);
-        _repositoryMock.Setup(r => r.DeleteAsync(id, It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        this.repositoryMock.Setup(r => r.GetAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(existing);
+        this.repositoryMock.Setup(r => r.DeleteAsync(id, It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
-        var result = await _controller.DeleteMediaException(id, CancellationToken.None);
+        var result = await this.controller.DeleteMediaException(id, CancellationToken.None);
 
         Assert.That(result, Is.InstanceOf<OkResult>());
     }
@@ -151,9 +151,9 @@ internal sealed class MediaExceptionManagementApiControllerTests
     [Test]
     public async Task DeleteMediaException_Returns_404_When_Not_Found()
     {
-        _repositoryMock.Setup(r => r.GetAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((MediaException?)null);
+        this.repositoryMock.Setup(r => r.GetAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((MediaException?)null);
 
-        var result = await _controller.DeleteMediaException(Guid.NewGuid(), CancellationToken.None);
+        var result = await this.controller.DeleteMediaException(Guid.NewGuid(), CancellationToken.None);
 
         Assert.That(result, Is.InstanceOf<NotFoundResult>());
     }
@@ -168,9 +168,9 @@ internal sealed class MediaExceptionManagementApiControllerTests
         {
             ImageOptimization = new ImageOptimizationSettings { DefaultImageQuality = 70, ForceWebP = true },
         };
-        _settingsMock.Setup(s => s.Value).Returns(settings);
+        this.settingsMock.Setup(s => s.Value).Returns(settings);
 
-        var result = _controller.GetDefaultValues();
+        var result = this.controller.GetDefaultValues();
 
         var ok = result as OkObjectResult;
         Assert.That(ok, Is.Not.Null);
