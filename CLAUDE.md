@@ -64,3 +64,21 @@ StyleCop.Analyzers is enforced with warnings-as-errors. Key rules from `src/styl
 ## Branch Strategy
 
 Feature branches → `develop` → `main` (triggers NuGet release via GitHub Actions).
+
+## Claude Code local setup
+
+`.claude/settings.local.json` is gitignored and must be created manually by each developer. It grants Claude Code read/write access to the local source repositories for TrueLime packages and Umbraco itself, so Claude can browse their source code directly instead of relying on decompiled DLLs or web searches.
+
+Create `.claude/settings.local.json` in the repo root with the paths that match where you have cloned these repositories locally:
+
+```json
+{
+  "permissions": {
+    "additionalDirectories": [
+      "C:\\forks\\Umbraco-CMS-release-17.4.2\\Umbraco-CMS-release-17.4.2",      
+    ]
+  }
+}
+```
+
+Adjust paths to match where you have cloned these repos. The file is already in `.gitignore`.
