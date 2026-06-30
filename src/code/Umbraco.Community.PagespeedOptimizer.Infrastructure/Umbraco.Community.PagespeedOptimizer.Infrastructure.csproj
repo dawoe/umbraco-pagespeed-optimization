@@ -2,6 +2,11 @@
 
   <ItemGroup>
     <PackageReference Include="Umbraco.Cms.Imaging.ImageSharp" />
+    <PackageReference Include="Umbraco.Cms.Persistence.EFCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
