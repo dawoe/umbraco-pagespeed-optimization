@@ -7,6 +7,7 @@ using Moq;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Community.PagespeedOptimizer.Core.Configuration;
+using Umbraco.Community.PagespeedOptimizer.Core.Repositories;
 using Umbraco.Community.PagespeedOptimizer.Infrastructure.OptionsConfiguration;
 
 namespace Umbraco.Community.PagespeedOptimizer.Infrastructure.Tests;
@@ -107,6 +108,23 @@ internal sealed class InfrastructureComposerTests
             Assert.That(compressionOptions?.Value.EnableForHttps, Is.True);
             Assert.That(compressionOptions?.Value.Providers.Count, Is.EqualTo(2));
         });
+    }
+
+    /// <summary>
+    /// Tests that <see cref="IMediaExceptionRepository"/> is registered as a scoped service.
+    /// </summary>
+    [Test]
+    public void IMediaExceptionRepository_Should_Be_Registered_As_Scoped()
+    {
+        var settings = new PageSpeedOptimizerSettings();
+
+        this.Compose(settings);
+
+        Assert.That(
+            this.serviceCollection.Any(x =>
+                x.ServiceType == typeof(IMediaExceptionRepository) &&
+                x.Lifetime == ServiceLifetime.Scoped),
+            Is.True);
     }
 
     private void Compose(PageSpeedOptimizerSettings settings)
