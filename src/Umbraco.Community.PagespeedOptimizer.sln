@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website-V17", "..\test-site
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.Community.PagespeedOptimizer.BackOffice", "code\Umbraco.Community.PagespeedOptimizer.BackOffice\Umbraco.Community.PagespeedOptimizer.BackOffice.csproj", "{C08CB63D-9AD5-49B7-B5B8-F72010B30A8C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.Community.PagespeedOptimizer.BackOffice.Tests", "test\Umbraco.Community.PagespeedOptimizer.BackOffice.Tests\Umbraco.Community.PagespeedOptimizer.BackOffice.Tests.csproj", "{BF28FBCB-FD91-4391-BCAC-C5550100B151}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,6 +110,18 @@ Global
 		{C08CB63D-9AD5-49B7-B5B8-F72010B30A8C}.Release|x64.Build.0 = Release|Any CPU
 		{C08CB63D-9AD5-49B7-B5B8-F72010B30A8C}.Release|x86.ActiveCfg = Release|Any CPU
 		{C08CB63D-9AD5-49B7-B5B8-F72010B30A8C}.Release|x86.Build.0 = Release|Any CPU
+		{BF28FBCB-FD91-4391-BCAC-C5550100B151}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF28FBCB-FD91-4391-BCAC-C5550100B151}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF28FBCB-FD91-4391-BCAC-C5550100B151}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BF28FBCB-FD91-4391-BCAC-C5550100B151}.Debug|x64.Build.0 = Debug|Any CPU
+		{BF28FBCB-FD91-4391-BCAC-C5550100B151}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BF28FBCB-FD91-4391-BCAC-C5550100B151}.Debug|x86.Build.0 = Debug|Any CPU
+		{BF28FBCB-FD91-4391-BCAC-C5550100B151}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF28FBCB-FD91-4391-BCAC-C5550100B151}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF28FBCB-FD91-4391-BCAC-C5550100B151}.Release|x64.ActiveCfg = Release|Any CPU
+		{BF28FBCB-FD91-4391-BCAC-C5550100B151}.Release|x64.Build.0 = Release|Any CPU
+		{BF28FBCB-FD91-4391-BCAC-C5550100B151}.Release|x86.ActiveCfg = Release|Any CPU
+		{BF28FBCB-FD91-4391-BCAC-C5550100B151}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
