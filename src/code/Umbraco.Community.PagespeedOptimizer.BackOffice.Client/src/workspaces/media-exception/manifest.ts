@@ -2,12 +2,12 @@ import { UMB_WORKSPACE_CONDITION_ALIAS } from '@umbraco-cms/backoffice/workspace
 
 const workspaceView : UmbExtensionManifest  = {
   type: 'workspaceView',
-  name: 'Example Counter Workspace View',
-  alias: 'example.workspaceView.counter',
+  name: 'PagespeedOptimizer Media Exception Workspace View',
+  alias: 'pagespeedoptimizer.workspaceView.mediaException',
   element: () => import('./element.ts'),
   weight: 900,
   meta: {
-  label: 'PagespeedOptimizer',
+  label: 'Pagespeed Optimizer',
   pathname: 'pagespeed-optimizer',
   icon: 'icon-scan',
   },
