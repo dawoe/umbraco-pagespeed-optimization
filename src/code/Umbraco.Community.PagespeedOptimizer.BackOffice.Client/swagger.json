@@ -410,6 +410,7 @@
       "DefaultValuesResponseModel": {
         "required": [
           "defaultImageQuality",
+          "enabled",
           "forceWebP"
         ],
         "type": "object",
@@ -417,6 +418,9 @@
           "defaultImageQuality": {
             "type": "integer",
             "format": "int32"
+          },
+          "enabled": {
+            "type": "boolean"
           },
           "forceWebP": {
             "type": "boolean"

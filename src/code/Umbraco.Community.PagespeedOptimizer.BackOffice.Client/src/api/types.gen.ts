@@ -12,6 +12,7 @@ export type CreateMediaExceptionRequestModel = {
 
 export type DefaultValuesResponseModel = {
     defaultImageQuality: number;
+    enabled: boolean;
     forceWebP: boolean;
 };
 
