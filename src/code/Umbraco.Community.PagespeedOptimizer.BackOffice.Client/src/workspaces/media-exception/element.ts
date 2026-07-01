@@ -1,10 +1,12 @@
 import { PageSpeedOptimizer } from "../../api";
 import {
   html,
+  nothing,
   LitElement,
   customElement,
   state,
 } from "@umbraco-cms/backoffice/external/lit";
+import type { UUIToggleElement, UUISliderEvent } from "@umbraco-cms/backoffice/external/uui";
 import { UmbElementMixin } from "@umbraco-cms/backoffice/element-api";
 import { UMB_ENTITY_WORKSPACE_CONTEXT } from "@umbraco-cms/backoffice/workspace";
 import { tryExecute } from "@umbraco-cms/backoffice/resources";
@@ -69,12 +71,58 @@ export class MediaExceptionWorkspaceView extends UmbElementMixin(LitElement) {
     this._loading = false;
   }
 
+  #onOverrideChange(e: Event) {
+    this._override = (e.target as UUIToggleElement).checked;
+
+    if (!this.#existingId) {
+      this._quality = this.#defaultQuality;
+      this._forceWebp = this.#defaultForceWebp;
+    }
+  }
+
+  #onQualityChange(e: UUISliderEvent) {
+    this._quality = Number(e.target.value);
+  }
+
+  #onForceWebpChange(e: Event) {
+    this._forceWebp = (e.target as UUIToggleElement).checked;
+  }
+
   override render() {
     if (this._loading) {
       return html`<uui-loader></uui-loader>`;
     }
 
-    return html`<p>Override: ${this._override}, Quality: ${this._quality}, ForceWebP: ${this._forceWebp}, Id: ${this.#existingId ?? 'none'}</p>`;
+    return html`
+      <uui-box>
+        <uui-toggle
+          label="Override image optimizations"
+          ?checked=${this._override}
+          @change=${this.#onOverrideChange}
+        ></uui-toggle>
+
+        ${this._override
+          ? html`
+              <div style="margin-top: var(--uui-size-space-4);">
+                <uui-label>Quality: ${this._quality}</uui-label>
+                <uui-slider
+                  min="1"
+                  max="100"
+                  step="1"
+                  .value=${this._quality.toString()}
+                  @change=${this.#onQualityChange}
+                ></uui-slider>
+
+                <uui-toggle
+                  label="Force WebP"
+                  ?checked=${this._forceWebp}
+                  @change=${this.#onForceWebpChange}
+                ></uui-toggle>
+              </div>
+            `
+          : nothing}
+      </uui-box>
+    `;
   }
 }
 
