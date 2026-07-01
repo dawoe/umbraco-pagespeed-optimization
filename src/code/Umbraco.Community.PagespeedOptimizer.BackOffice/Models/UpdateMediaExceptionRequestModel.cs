@@ -1,5 +1,7 @@
 // Copyright (c) Dave Woestenborghs and contributors. Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using System.ComponentModel.DataAnnotations;
+
 namespace Umbraco.Community.PagespeedOptimizer.BackOffice.Models;
 
 /// <summary>
@@ -10,6 +12,7 @@ public sealed class UpdateMediaExceptionRequestModel
     /// <summary>
     /// Gets or sets the image quality override for this media item (1–100).
     /// </summary>
+    [Range(1, 100)]
     public required int Quality { get; set; }
 
     /// <summary>
