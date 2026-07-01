@@ -16,4 +16,9 @@ public sealed class DefaultValuesResponseModel
     /// Gets or sets a value indicating whether WebP is forced globally.
     /// </summary>
     public required bool ForceWebP { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether image optimization is enabled globally.
+    /// </summary>
+    public required bool Enabled { get; set; }
 }

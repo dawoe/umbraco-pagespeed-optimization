@@ -206,7 +206,7 @@ internal sealed class MediaExceptionManagementApiControllerTests
     {
         var settings = new PageSpeedOptimizerSettings
         {
-            ImageOptimization = new ImageOptimizationSettings { DefaultImageQuality = 70, ForceWebP = true },
+            ImageOptimization = new ImageOptimizationSettings { DefaultImageQuality = 70, ForceWebP = true, Enabled = true },
         };
         this.settingsMock.Setup(s => s.Value).Returns(settings);
 
@@ -221,6 +221,7 @@ internal sealed class MediaExceptionManagementApiControllerTests
             Assert.That(response, Is.Not.Null);
             Assert.That(response!.DefaultImageQuality, Is.EqualTo(70));
             Assert.That(response.ForceWebP, Is.True);
+            Assert.That(response.Enabled, Is.True);
         });
     }
 }

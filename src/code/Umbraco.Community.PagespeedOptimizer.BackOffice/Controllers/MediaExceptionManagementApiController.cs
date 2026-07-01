@@ -149,6 +149,7 @@ public sealed class MediaExceptionManagementApiController : ManagementApiControl
         {
             DefaultImageQuality = imageSettings.DefaultImageQuality,
             ForceWebP = imageSettings.ForceWebP,
+            Enabled = imageSettings.Enabled,
         });
     }
 
