@@ -186,16 +186,18 @@ internal sealed class MediaExceptionManagementApiControllerTests
     }
 
     /// <summary>
-    /// Tests that <see cref="MediaExceptionManagementApiController.GetByMediaKey"/> returns 404 when no media exception exists for the given media key.
+    /// Tests that <see cref="MediaExceptionManagementApiController.GetByMediaKey"/> returns 200 OK with a null body when no media exception exists for the given media key.
     /// </summary>
     [Test]
-    public async Task GetByMediaKey_Returns_404_When_Not_Found()
+    public async Task GetByMediaKey_Returns_200_With_Null_When_Not_Found()
     {
         this.repositoryMock.Setup(r => r.GetByMediaKeyAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((MediaException?)null);
 
         var result = await this.controller.GetByMediaKey(Guid.NewGuid(), CancellationToken.None);
 
-        Assert.That(result, Is.InstanceOf<NotFoundResult>());
+        var ok = result as OkObjectResult;
+        Assert.That(ok, Is.Not.Null);
+        Assert.That(ok!.Value, Is.Null);
     }
 
     /// <summary>
@@ -206,7 +208,7 @@ internal sealed class MediaExceptionManagementApiControllerTests
     {
         var settings = new PageSpeedOptimizerSettings
         {
-            ImageOptimization = new ImageOptimizationSettings { DefaultImageQuality = 70, ForceWebP = true },
+            ImageOptimization = new ImageOptimizationSettings { DefaultImageQuality = 70, ForceWebP = true, Enabled = true },
         };
         this.settingsMock.Setup(s => s.Value).Returns(settings);
 
@@ -221,6 +223,7 @@ internal sealed class MediaExceptionManagementApiControllerTests
             Assert.That(response, Is.Not.Null);
             Assert.That(response!.DefaultImageQuality, Is.EqualTo(70));
             Assert.That(response.ForceWebP, Is.True);
+            Assert.That(response.Enabled, Is.True);
         });
     }
 }

@@ -1,0 +1,2 @@
+export const PAGESPEED_OPTIMIZER_IMAGE_OPTIMIZATION_ENABLED_CONDITION_ALIAS =
+  'pagespeedoptimizer.condition.imageOptimizationEnabled';

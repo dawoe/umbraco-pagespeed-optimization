@@ -4,3 +4,5 @@
 src/Umbraco.Community.PagespeedOptimizer.sln.DotSettings.user
 src/TestResults/
 src/Umbraco.Community.PagespeedOptimizer.slnx.DotSettings.user
+src/code/Umbraco.Community.PagespeedOptimizer.BackOffice.Client/wwwroot/App_Plugins/pagespeedoptimizer/
+src/code/Umbraco.Community.PagespeedOptimizer.BackOffice/wwwroot/App_Plugins/pagespeedoptimizer/
