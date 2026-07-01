@@ -10,12 +10,17 @@ using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Media;
 using Umbraco.Cms.Core.Notifications;
 using Umbraco.Cms.Imaging.ImageSharp.Media;
+using Umbraco.Community.PagespeedOptimizer.Core.Caching;
 using Umbraco.Community.PagespeedOptimizer.Core.Configuration;
 using Umbraco.Community.PagespeedOptimizer.Core.Repositories;
+using Umbraco.Community.PagespeedOptimizer.Core.Services;
+using Umbraco.Community.PagespeedOptimizer.Infrastructure.Caching;
+using Umbraco.Community.PagespeedOptimizer.Infrastructure.Caching.Notifications;
 using Umbraco.Community.PagespeedOptimizer.Infrastructure.OptionsConfiguration;
 using Umbraco.Community.PagespeedOptimizer.Infrastructure.Persistence;
 using Umbraco.Community.PagespeedOptimizer.Infrastructure.Persistence.Notifications;
 using Umbraco.Community.PagespeedOptimizer.Infrastructure.Persistence.Repositories;
+using Umbraco.Community.PagespeedOptimizer.Infrastructure.Services;
 using Umbraco.Extensions;
 
 namespace Umbraco.Community.PagespeedOptimizer.Infrastructure.Extensions;
@@ -36,7 +41,8 @@ internal static class UmbracoBuilderExtensions
             .AddStaticCache()
             .AddResponseCompression()
             .AddOptimizedImageUrlGenerator()
-            .AddMediaExceptionPersistence();
+            .AddMediaExceptionPersistence()
+            .AddMediaExceptionCaching();
 
     private static IUmbracoBuilder LoadConfiguration(this IUmbracoBuilder builder)
     {
@@ -117,8 +123,9 @@ internal static class UmbracoBuilderExtensions
             var inner = (IImageUrlGenerator)ActivatorUtilities.CreateInstance(provider, imageSharpGenerator.ImplementationType);
 
             var options = provider.GetRequiredService<IOptions<PageSpeedOptimizerSettings>>();
+            var mediaExceptionCache = provider.GetRequiredService<IMediaExceptionCache>();
 
-            return new OptimizedImageUrlGenerator(inner, options);
+            return new OptimizedImageUrlGenerator(inner, options, mediaExceptionCache);
         });
 
         return builder;
@@ -140,9 +147,27 @@ internal static class UmbracoBuilderExtensions
                 }
             });
 
-        builder.Services.AddScoped<IMediaExceptionRepository, MediaExceptionRepository>();
+        builder.Services.AddSingleton<IMediaExceptionRepository, MediaExceptionRepository>();
 
         builder.AddNotificationAsyncHandler<UmbracoApplicationStartedNotification, RunMediaExceptionsMigration>();
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Registers the media exception cache, the service that keeps it in sync with writes, the cache refresher, and the notification handlers that rebuild it asynchronously.
+    /// </summary>
+    /// <param name="builder">A <see cref="IUmbracoBuilder"/>.</param>
+    /// <returns>Updated <see cref="IUmbracoBuilder"/>.</returns>
+    private static IUmbracoBuilder AddMediaExceptionCaching(this IUmbracoBuilder builder)
+    {
+        builder.Services.AddSingleton<IMediaExceptionCache, MediaExceptionCache>();
+        builder.Services.AddSingleton<IMediaExceptionService, MediaExceptionService>();
+
+        builder.CacheRefreshers().Add<MediaExceptionCacheRefresher>();
+
+        builder.AddNotificationAsyncHandler<UmbracoApplicationStartedNotification, RebuildMediaExceptionCacheOnStartup>();
+        builder.AddNotificationAsyncHandler<MediaExceptionCacheRefresherNotification, RebuildMediaExceptionCacheOnRefresh>();
 
         return builder;
     }

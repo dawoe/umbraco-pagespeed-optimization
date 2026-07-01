@@ -7,8 +7,10 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
+using Umbraco.Community.PagespeedOptimizer.Core.Caching;
 using Umbraco.Community.PagespeedOptimizer.Core.Configuration;
 using Umbraco.Community.PagespeedOptimizer.Core.Repositories;
+using Umbraco.Community.PagespeedOptimizer.Core.Services;
 using Umbraco.Community.PagespeedOptimizer.Infrastructure.OptionsConfiguration;
 
 namespace Umbraco.Community.PagespeedOptimizer.Infrastructure.Tests;
@@ -112,10 +114,10 @@ internal sealed class InfrastructureComposerTests
     }
 
     /// <summary>
-    /// Tests that <see cref="IMediaExceptionRepository"/> is registered as a scoped service.
+    /// Tests that <see cref="IMediaExceptionRepository"/> is registered as a singleton service.
     /// </summary>
     [Test]
-    public void IMediaExceptionRepository_Should_Be_Registered_As_Scoped()
+    public void IMediaExceptionRepository_Should_Be_Registered_As_Singleton()
     {
         var settings = new PageSpeedOptimizerSettings();
 
@@ -124,7 +126,41 @@ internal sealed class InfrastructureComposerTests
         Assert.That(
             this.serviceCollection.Any(x =>
                 x.ServiceType == typeof(IMediaExceptionRepository) &&
-                x.Lifetime == ServiceLifetime.Scoped),
+                x.Lifetime == ServiceLifetime.Singleton),
+            Is.True);
+    }
+
+    /// <summary>
+    /// Tests that <see cref="IMediaExceptionCache"/> is registered as a singleton service.
+    /// </summary>
+    [Test]
+    public void IMediaExceptionCache_Should_Be_Registered_As_Singleton()
+    {
+        var settings = new PageSpeedOptimizerSettings();
+
+        this.Compose(settings);
+
+        Assert.That(
+            this.serviceCollection.Any(x =>
+                x.ServiceType == typeof(IMediaExceptionCache) &&
+                x.Lifetime == ServiceLifetime.Singleton),
+            Is.True);
+    }
+
+    /// <summary>
+    /// Tests that <see cref="IMediaExceptionService"/> is registered as a singleton service.
+    /// </summary>
+    [Test]
+    public void IMediaExceptionService_Should_Be_Registered_As_Singleton()
+    {
+        var settings = new PageSpeedOptimizerSettings();
+
+        this.Compose(settings);
+
+        Assert.That(
+            this.serviceCollection.Any(x =>
+                x.ServiceType == typeof(IMediaExceptionService) &&
+                x.Lifetime == ServiceLifetime.Singleton),
             Is.True);
     }
 

@@ -1,15 +1,19 @@
 using Microsoft.Extensions.Options;
 using Umbraco.Cms.Core.Media;
 using Umbraco.Cms.Core.Models;
+using Umbraco.Community.PagespeedOptimizer.Core.Caching;
 using Umbraco.Community.PagespeedOptimizer.Core.Configuration;
+using Umbraco.Community.PagespeedOptimizer.Core.Models;
 
 namespace Umbraco.Community.PagespeedOptimizer.Infrastructure;
 
 /// <summary>
-/// Image url generator that sets quality and forces webp format.
+/// Image url generator that sets quality and forces webp format, applying per-media exceptions where they exist.
 /// </summary>
 /// <param name="innerGenerator">The existing umbraco generator that we decorate in this one.</param>
-internal sealed class OptimizedImageUrlGenerator(IImageUrlGenerator innerGenerator, IOptions<PageSpeedOptimizerSettings> options)
+/// <param name="options">The page speed optimizer settings.</param>
+/// <param name="mediaExceptionCache">The cache of per-media quality/WebP overrides.</param>
+internal sealed class OptimizedImageUrlGenerator(IImageUrlGenerator innerGenerator, IOptions<PageSpeedOptimizerSettings> options, IMediaExceptionCache mediaExceptionCache)
     : IImageUrlGenerator
 {
     private ImageOptimizationSettings settings = options.Value.ImageOptimization;
@@ -32,19 +36,21 @@ internal sealed class OptimizedImageUrlGenerator(IImageUrlGenerator innerGenerat
             return innerGenerator.GetImageUrl(options);
         }
 
-        this.TrySetWebpFormat(options);
+        var exception = mediaExceptionCache.GetByImageUrl(options.ImageUrl);
+
+        this.TrySetWebpFormat(options, exception);
 
         if (options.Quality.HasValue)
         {
             return innerGenerator.GetImageUrl(options);
         }
 
-        options.Quality = this.settings.DefaultImageQuality;
+        options.Quality = exception?.Quality ?? this.settings.DefaultImageQuality;
 
         return innerGenerator.GetImageUrl(options);
     }
 
-    private void TrySetWebpFormat(ImageUrlGenerationOptions options)
+    private void TrySetWebpFormat(ImageUrlGenerationOptions options, MediaException? exception)
     {
         if (string.IsNullOrWhiteSpace(options.FurtherOptions) == false &&
             options.FurtherOptions.Contains(FormatParam))
@@ -52,7 +58,9 @@ internal sealed class OptimizedImageUrlGenerator(IImageUrlGenerator innerGenerat
             return;
         }
 
-        if (this.settings.ForceWebP == false)
+        var forceWebP = exception?.ForceWebp ?? this.settings.ForceWebP;
+
+        if (forceWebP == false)
         {
             return;
         }
