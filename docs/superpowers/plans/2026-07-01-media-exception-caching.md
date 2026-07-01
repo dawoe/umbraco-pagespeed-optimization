@@ -737,6 +737,7 @@ git commit -m "feat: rebuild media exception cache asynchronously on startup and
 
 using Microsoft.Extensions.Options;
 using Moq;
+using Umbraco.Cms.Core.Media;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Community.PagespeedOptimizer.Core.Caching;
 using Umbraco.Community.PagespeedOptimizer.Core.Configuration;
