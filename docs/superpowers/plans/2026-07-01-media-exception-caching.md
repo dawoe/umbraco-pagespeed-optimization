@@ -620,6 +620,7 @@ Expected: build FAILS — handler classes do not exist yet.
 // Copyright (c) Dave Woestenborghs and contributors. Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using Microsoft.Extensions.Logging;
+using Umbraco.Cms.Core.Events;
 using Umbraco.Cms.Core.Notifications;
 using Umbraco.Community.PagespeedOptimizer.Core.Caching;
 
@@ -665,6 +666,7 @@ internal sealed class RebuildMediaExceptionCacheOnStartup : INotificationAsyncHa
 // Copyright (c) Dave Woestenborghs and contributors. Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using Microsoft.Extensions.Logging;
+using Umbraco.Cms.Core.Events;
 using Umbraco.Cms.Core.Notifications;
 using Umbraco.Community.PagespeedOptimizer.Core.Caching;
 
