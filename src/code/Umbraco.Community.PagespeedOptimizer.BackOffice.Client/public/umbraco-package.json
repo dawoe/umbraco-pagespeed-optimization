@@ -1,0 +1,13 @@
+{
+    "$schema": "../node_modules/@umbraco-cms/backoffice/dist-cms/umbraco-package-schema.json",
+    "name": "​Pagespeed​Optimizer",
+    "version": "17.2.0",
+    "extensions": [
+        {
+            "type": "backofficeEntryPoint",
+            "alias": "Umbraco.Community.PagespeedOptimizer",
+            "name": "PagespeedOptimizer Entry Point",
+            "js": "/App_Plugins/pagespeedoptimizer/entry-point.js?v=17.2.0"
+        }
+    ]
+}
