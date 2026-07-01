@@ -11,7 +11,7 @@ using Umbraco.Cms.Web.Common.Routing;
 using Umbraco.Community.PagespeedOptimizer.BackOffice.Models;
 using Umbraco.Community.PagespeedOptimizer.Core.Configuration;
 using Umbraco.Community.PagespeedOptimizer.Core.Models;
-using Umbraco.Community.PagespeedOptimizer.Core.Repositories;
+using Umbraco.Community.PagespeedOptimizer.Core.Services;
 
 namespace Umbraco.Community.PagespeedOptimizer.BackOffice.Controllers;
 
@@ -25,19 +25,19 @@ namespace Umbraco.Community.PagespeedOptimizer.BackOffice.Controllers;
 [ApiExplorerSettings(GroupName = "Page Speed Optimizer")]
 public sealed class MediaExceptionManagementApiController : ManagementApiControllerBase
 {
-    private readonly IMediaExceptionRepository repository;
+    private readonly IMediaExceptionService service;
     private readonly IOptions<PageSpeedOptimizerSettings> settings;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MediaExceptionManagementApiController"/> class.
     /// </summary>
-    /// <param name="repository">The media exception repository.</param>
+    /// <param name="service">The media exception service.</param>
     /// <param name="settings">The page speed optimizer settings.</param>
     public MediaExceptionManagementApiController(
-        IMediaExceptionRepository repository,
+        IMediaExceptionService service,
         IOptions<PageSpeedOptimizerSettings> settings)
     {
-        this.repository = repository;
+        this.service = service;
         this.settings = settings;
     }
 
@@ -52,7 +52,7 @@ public sealed class MediaExceptionManagementApiController : ManagementApiControl
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> CreateMediaException([FromBody] CreateMediaExceptionRequestModel request, CancellationToken ct)
     {
-        var existing = await this.repository.GetByMediaKeyAsync(request.MediaKey, ct);
+        var existing = await this.service.GetByMediaKeyAsync(request.MediaKey, ct);
         if (existing is not null)
         {
             return this.Conflict();
@@ -66,7 +66,7 @@ public sealed class MediaExceptionManagementApiController : ManagementApiControl
             ForceWebp = request.ForceWebp,
         };
 
-        var created = await this.repository.CreateAsync(entity, ct);
+        var created = await this.service.CreateAsync(entity, ct);
         return this.Created($"/media-exception/{created.Id}", MapToResponseModel(created));
     }
 
@@ -82,7 +82,7 @@ public sealed class MediaExceptionManagementApiController : ManagementApiControl
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateMediaException(Guid id, [FromBody] UpdateMediaExceptionRequestModel request, CancellationToken ct)
     {
-        var existing = await this.repository.GetAsync(id, ct);
+        var existing = await this.service.GetAsync(id, ct);
         if (existing is null)
         {
             return this.NotFound();
@@ -91,7 +91,7 @@ public sealed class MediaExceptionManagementApiController : ManagementApiControl
         existing.Quality = request.Quality;
         existing.ForceWebp = request.ForceWebp;
 
-        var updated = await this.repository.UpdateAsync(existing, ct);
+        var updated = await this.service.UpdateAsync(existing, ct);
         return this.Ok(MapToResponseModel(updated));
     }
 
@@ -106,13 +106,13 @@ public sealed class MediaExceptionManagementApiController : ManagementApiControl
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteMediaException(Guid id, CancellationToken ct)
     {
-        var existing = await this.repository.GetAsync(id, ct);
+        var existing = await this.service.GetAsync(id, ct);
         if (existing is null)
         {
             return this.NotFound();
         }
 
-        await this.repository.DeleteAsync(id, ct);
+        await this.service.DeleteAsync(id, ct);
         return this.Ok();
     }
 
@@ -127,7 +127,7 @@ public sealed class MediaExceptionManagementApiController : ManagementApiControl
     [ProducesResponseType(typeof(MediaExceptionResponseModel), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetByMediaKey(Guid mediaKey, CancellationToken ct)
     {
-        var existing = await this.repository.GetByMediaKeyAsync(mediaKey, ct);
+        var existing = await this.service.GetByMediaKeyAsync(mediaKey, ct);
         return this.Ok(existing is null ? null : MapToResponseModel(existing));
     }
 
