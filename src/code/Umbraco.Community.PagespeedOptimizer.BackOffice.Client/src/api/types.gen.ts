@@ -12,8 +12,8 @@ export type CreateMediaExceptionRequestModel = {
 
 export type DefaultValuesResponseModel = {
     defaultImageQuality: number;
-    enabled: boolean;
     forceWebP: boolean;
+    enabled: boolean;
 };
 
 export type EventMessageTypeModel = 'Default' | 'Info' | 'Error' | 'Success' | 'Warning';
@@ -155,7 +155,7 @@ export type GetByMediaKeyResponses = {
     /**
      * OK
      */
-    200: MediaExceptionResponseModel | null;
+    200: MediaExceptionResponseModel;
 };
 
 export type GetByMediaKeyResponse = GetByMediaKeyResponses[keyof GetByMediaKeyResponses];
