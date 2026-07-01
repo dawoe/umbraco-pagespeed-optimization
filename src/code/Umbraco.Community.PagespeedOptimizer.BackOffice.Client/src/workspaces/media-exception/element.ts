@@ -10,6 +10,8 @@ import type { UUIToggleElement, UUISliderEvent } from "@umbraco-cms/backoffice/e
 import { UmbElementMixin } from "@umbraco-cms/backoffice/element-api";
 import { UMB_ENTITY_WORKSPACE_CONTEXT } from "@umbraco-cms/backoffice/workspace";
 import { tryExecute } from "@umbraco-cms/backoffice/resources";
+import { UMB_NOTIFICATION_CONTEXT } from "@umbraco-cms/backoffice/notification";
+import type { UmbNotificationContext } from "@umbraco-cms/backoffice/notification";
 
 @customElement("media-exception-workspace-view")
 export class MediaExceptionWorkspaceView extends UmbElementMixin(LitElement) {
@@ -24,6 +26,11 @@ export class MediaExceptionWorkspaceView extends UmbElementMixin(LitElement) {
 
   @state()
   private _forceWebp = false;
+
+  @state()
+  private _saving = false;
+
+  #notificationContext?: UmbNotificationContext;
 
   #mediaKey?: string;
   #existingId?: string;
@@ -40,6 +47,10 @@ export class MediaExceptionWorkspaceView extends UmbElementMixin(LitElement) {
           this.#loadData(unique);
         }
       });
+    });
+
+    this.consumeContext(UMB_NOTIFICATION_CONTEXT, (context) => {
+      this.#notificationContext = context;
     });
   }
 
@@ -88,6 +99,53 @@ export class MediaExceptionWorkspaceView extends UmbElementMixin(LitElement) {
     this._forceWebp = (e.target as UUIToggleElement).checked;
   }
 
+  async #onSave() {
+    if (!this.#mediaKey) return;
+
+    this._saving = true;
+
+    if (this._override) {
+      if (this.#existingId) {
+        const { error } = await tryExecute(
+          this,
+          PageSpeedOptimizer.updateMediaException({
+            path: { id: this.#existingId },
+            body: { quality: this._quality, forceWebp: this._forceWebp },
+          }),
+        );
+        if (!error) this.#notifySuccess();
+      } else {
+        const { data, error } = await tryExecute(
+          this,
+          PageSpeedOptimizer.createMediaException({
+            body: { mediaKey: this.#mediaKey, quality: this._quality, forceWebp: this._forceWebp },
+          }),
+        );
+        if (!error && data) {
+          this.#existingId = data.id;
+          this.#notifySuccess();
+        }
+      }
+    } else if (this.#existingId) {
+      const { error } = await tryExecute(
+        this,
+        PageSpeedOptimizer.deleteMediaException({ path: { id: this.#existingId } }),
+      );
+      if (!error) {
+        this.#existingId = undefined;
+        this.#notifySuccess();
+      }
+    } else {
+      this.#notifySuccess();
+    }
+
+    this._saving = false;
+  }
+
+  #notifySuccess() {
+    this.#notificationContext?.peek('positive', { data: { message: 'Image optimization settings saved.' } });
+  }
+
   override render() {
     if (this._loading) {
       return html`<uui-loader></uui-loader>`;
@@ -121,6 +179,14 @@ export class MediaExceptionWorkspaceView extends UmbElementMixin(LitElement) {
               </div>
             `
           : nothing}
+
+        <uui-button
+          label="Save"
+          look="primary"
+          style="margin-top: var(--uui-size-space-4);"
+          ?disabled=${this._saving}
+          @click=${this.#onSave}
+        ></uui-button>
       </uui-box>
     `;
   }
