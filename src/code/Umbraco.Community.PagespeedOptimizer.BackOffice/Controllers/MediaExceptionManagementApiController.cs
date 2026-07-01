@@ -121,19 +121,14 @@ public sealed class MediaExceptionManagementApiController : ManagementApiControl
     /// </summary>
     /// <param name="mediaKey">The Umbraco media item key.</param>
     /// <param name="ct">Cancellation token.</param>
-    /// <returns>The media exception, or 404 Not Found if no exception exists for the given media key.</returns>
+    /// <returns>The media exception, or 200 OK with a <see langword="null"/> body if no exception exists for the given media key.</returns>
+    /// <remarks>Returns 200 with a null body rather than 404: most media items have no override, so this is the expected steady state rather than an error condition.</remarks>
     [HttpGet("by-media-key/{mediaKey:guid}")]
     [ProducesResponseType(typeof(MediaExceptionResponseModel), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByMediaKey(Guid mediaKey, CancellationToken ct)
     {
         var existing = await this.repository.GetByMediaKeyAsync(mediaKey, ct);
-        if (existing is null)
-        {
-            return this.NotFound();
-        }
-
-        return this.Ok(MapToResponseModel(existing));
+        return this.Ok(existing is null ? null : MapToResponseModel(existing));
     }
 
     /// <summary>

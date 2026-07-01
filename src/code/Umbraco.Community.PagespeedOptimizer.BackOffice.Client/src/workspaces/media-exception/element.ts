@@ -1,5 +1,6 @@
 import { PageSpeedOptimizer } from "../../api";
 import {
+  css,
   html,
   nothing,
   LitElement,
@@ -146,6 +147,23 @@ export class MediaExceptionWorkspaceView extends UmbElementMixin(LitElement) {
     this.#notificationContext?.peek('positive', { data: { message: 'Image optimization settings saved.' } });
   }
 
+  static override styles = [
+    css`
+      :host {
+        display: block;
+        margin: var(--uui-size-layout-1);
+        padding-bottom: var(--uui-size-layout-1);
+      }
+
+      .content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--uui-size-space-4);
+        align-items: flex-start;
+      }
+    `,
+  ];
+
   override render() {
     if (this._loading) {
       return html`<uui-loader></uui-loader>`;
@@ -153,15 +171,15 @@ export class MediaExceptionWorkspaceView extends UmbElementMixin(LitElement) {
 
     return html`
       <uui-box>
-        <uui-toggle
-          label="Override image optimizations"
-          ?checked=${this._override}
-          @change=${this.#onOverrideChange}
-        ></uui-toggle>
+        <div class="content">
+          <uui-toggle
+            label="Override image optimizations"
+            ?checked=${this._override}
+            @change=${this.#onOverrideChange}
+          ></uui-toggle>
 
-        ${this._override
-          ? html`
-              <div style="margin-top: var(--uui-size-space-4);">
+          ${this._override
+            ? html`
                 <uui-label>Quality: ${this._quality}</uui-label>
                 <uui-slider
                   min="1"
@@ -176,17 +194,16 @@ export class MediaExceptionWorkspaceView extends UmbElementMixin(LitElement) {
                   ?checked=${this._forceWebp}
                   @change=${this.#onForceWebpChange}
                 ></uui-toggle>
-              </div>
-            `
-          : nothing}
+              `
+            : nothing}
 
-        <uui-button
-          label="Save"
-          look="primary"
-          style="margin-top: var(--uui-size-space-4);"
-          ?disabled=${this._saving}
-          @click=${this.#onSave}
-        ></uui-button>
+          <uui-button
+            label="Save"
+            look="primary"
+            ?disabled=${this._saving}
+            @click=${this.#onSave}
+          ></uui-button>
+        </div>
       </uui-box>
     `;
   }

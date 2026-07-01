@@ -7,7 +7,9 @@ const workspaceView : UmbExtensionManifest  = {
   name: 'PagespeedOptimizer Media Exception Workspace View',
   alias: 'pagespeedoptimizer.workspaceView.mediaException',
   element: () => import('./element.ts'),
-  weight: 900,
+  // Views sort by descending weight; Media's built-in Details tab is 200 and Info tab is 100,
+  // so 150 places this view directly after Details.
+  weight: 150,
   meta: {
   label: 'Pagespeed Optimizer',
   pathname: 'pagespeed-optimizer',

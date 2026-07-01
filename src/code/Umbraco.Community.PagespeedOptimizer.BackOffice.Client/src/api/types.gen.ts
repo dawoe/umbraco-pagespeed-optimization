@@ -149,17 +149,13 @@ export type GetByMediaKeyErrors = {
      * The authenticated user does not have access to this resource
      */
     403: unknown;
-    /**
-     * Not Found
-     */
-    404: unknown;
 };
 
 export type GetByMediaKeyResponses = {
     /**
      * OK
      */
-    200: MediaExceptionResponseModel;
+    200: MediaExceptionResponseModel | null;
 };
 
 export type GetByMediaKeyResponse = GetByMediaKeyResponses[keyof GetByMediaKeyResponses];
