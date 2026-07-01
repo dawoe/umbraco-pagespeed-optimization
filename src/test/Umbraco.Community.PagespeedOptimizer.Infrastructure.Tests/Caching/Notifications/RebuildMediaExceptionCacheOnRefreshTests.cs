@@ -45,5 +45,7 @@ internal sealed class RebuildMediaExceptionCacheOnRefreshTests
         var notification = new MediaExceptionCacheRefresherNotification(string.Empty, MessageType.RefreshAll);
 
         Assert.DoesNotThrowAsync(async () => await handler.HandleAsync(notification, CancellationToken.None));
+
+        cacheMock.Verify(c => c.RebuildAsync(), Times.Once);
     }
 }

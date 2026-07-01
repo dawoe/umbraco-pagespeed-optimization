@@ -40,5 +40,7 @@ internal sealed class RebuildMediaExceptionCacheOnStartupTests
         var handler = new RebuildMediaExceptionCacheOnStartup(cacheMock.Object, NullLogger<RebuildMediaExceptionCacheOnStartup>.Instance);
 
         Assert.DoesNotThrowAsync(async () => await handler.HandleAsync(new UmbracoApplicationStartedNotification(false), CancellationToken.None));
+
+        cacheMock.Verify(c => c.RebuildAsync(), Times.Once);
     }
 }
