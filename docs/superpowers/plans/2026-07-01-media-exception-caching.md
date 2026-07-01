@@ -337,6 +337,7 @@ git commit -m "feat: add IMediaExceptionCache with isolated-cache-backed URL loo
 using Moq;
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Events;
+using Umbraco.Cms.Core.Notifications;
 using Umbraco.Cms.Core.Sync;
 using Umbraco.Community.PagespeedOptimizer.Infrastructure.Caching;
 
@@ -358,10 +359,13 @@ internal sealed class MediaExceptionCacheRefresherTests
 
         MediaExceptionCacheRefresherNotification? published = null;
 
+        // CacheRefresherBase<TNotification>.OnCacheUpdated takes a CacheRefresherNotification, so the
+        // generic type argument resolved at the EventAggregator.Publish call site is CacheRefresherNotification,
+        // not MediaExceptionCacheRefresherNotification. The setup must match that actual runtime dispatch.
         var eventAggregatorMock = new Mock<IEventAggregator>();
         eventAggregatorMock
-            .Setup(a => a.Publish(It.IsAny<MediaExceptionCacheRefresherNotification>()))
-            .Callback<MediaExceptionCacheRefresherNotification>(n => published = n);
+            .Setup(a => a.Publish(It.IsAny<CacheRefresherNotification>()))
+            .Callback<CacheRefresherNotification>(n => published = n as MediaExceptionCacheRefresherNotification);
 
         var notificationFactoryMock = new Mock<ICacheRefresherNotificationFactory>();
         notificationFactoryMock
