@@ -1433,7 +1433,7 @@ using Umbraco.Community.PagespeedOptimizer.Infrastructure.Services;
         builder.Services.AddSingleton<IMediaExceptionCache, MediaExceptionCache>();
         builder.Services.AddSingleton<IMediaExceptionService, MediaExceptionService>();
 
-        builder.CacheRefreshers().Append<MediaExceptionCacheRefresher>();
+        builder.CacheRefreshers().Add<MediaExceptionCacheRefresher>();
 
         builder.AddNotificationAsyncHandler<UmbracoApplicationStartedNotification, RebuildMediaExceptionCacheOnStartup>();
         builder.AddNotificationAsyncHandler<MediaExceptionCacheRefresherNotification, RebuildMediaExceptionCacheOnRefresh>();
@@ -1488,7 +1488,7 @@ Expected: All tests pass, including every test added in Tasks 1–7 and every pr
 
 - [ ] **Step 3: Note manual verification gap**
 
-The DI wiring for `builder.CacheRefreshers().Append<MediaExceptionCacheRefresher>()` is exercised by Task 7's tests only insofar as it doesn't throw during composition — Umbraco's `CacheRefresherCollectionBuilder` doesn't surface appended types as inspectable `IServiceCollection` entries, so there is no reliable unit-test assertion for "the refresher is registered with Umbraco's cache refresher collection." Record this as a manual check: after implementation, run the package against `test-sites/Website-V17/`, create/update/delete a media exception via the back-office workspace view, and confirm (via a breakpoint or log line temporarily added to `RebuildMediaExceptionCacheOnRefresh`) that the cache rebuild fires. Remove any temporary debugging aids before considering the branch done.
+The DI wiring for `builder.CacheRefreshers().Add<MediaExceptionCacheRefresher>()` is exercised by Task 7's tests only insofar as it doesn't throw during composition — Umbraco's `CacheRefresherCollectionBuilder` doesn't surface appended types as inspectable `IServiceCollection` entries, so there is no reliable unit-test assertion for "the refresher is registered with Umbraco's cache refresher collection." Record this as a manual check: after implementation, run the package against `test-sites/Website-V17/`, create/update/delete a media exception via the back-office workspace view, and confirm (via a breakpoint or log line temporarily added to `RebuildMediaExceptionCacheOnRefresh`) that the cache rebuild fires. Remove any temporary debugging aids before considering the branch done.
 
 - [ ] **Step 4: Commit (only if Step 3's manual check required code changes; otherwise skip)**
 
