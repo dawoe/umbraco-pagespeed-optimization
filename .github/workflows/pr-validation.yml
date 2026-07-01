@@ -17,11 +17,22 @@ jobs:
     
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24.11.1'
       
       - name: Setup dotnet
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '10.x'
+          
+      - name: NPM install
+        run:  npm ci
+        working-directory: src/code/Umbraco.Community.PagespeedOptimizer.BackOffice.Client
+        
+      - name: NPM build
+        run:  npm run build
+        working-directory: src/code/Umbraco.Community.PagespeedOptimizer.BackOffice.Client            
       
       - name: Restore
         run: dotnet restore 
