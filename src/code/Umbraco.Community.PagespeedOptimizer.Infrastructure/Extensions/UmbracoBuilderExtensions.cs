@@ -10,6 +10,7 @@ using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Media;
 using Umbraco.Cms.Core.Notifications;
 using Umbraco.Cms.Imaging.ImageSharp.Media;
+using Umbraco.Community.PagespeedOptimizer.Core.Caching;
 using Umbraco.Community.PagespeedOptimizer.Core.Configuration;
 using Umbraco.Community.PagespeedOptimizer.Core.Repositories;
 using Umbraco.Community.PagespeedOptimizer.Infrastructure.OptionsConfiguration;
@@ -117,8 +118,9 @@ internal static class UmbracoBuilderExtensions
             var inner = (IImageUrlGenerator)ActivatorUtilities.CreateInstance(provider, imageSharpGenerator.ImplementationType);
 
             var options = provider.GetRequiredService<IOptions<PageSpeedOptimizerSettings>>();
+            var mediaExceptionCache = provider.GetRequiredService<IMediaExceptionCache>();
 
-            return new OptimizedImageUrlGenerator(inner, options);
+            return new OptimizedImageUrlGenerator(inner, options, mediaExceptionCache);
         });
 
         return builder;
