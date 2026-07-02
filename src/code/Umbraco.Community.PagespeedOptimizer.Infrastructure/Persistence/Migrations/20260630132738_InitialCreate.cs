@@ -13,14 +13,19 @@ namespace Umbraco.Community.PagespeedOptimizer.Infrastructure.Persistence.Migrat
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            var isSqlServer = migrationBuilder.ActiveProvider == "Microsoft.EntityFrameworkCore.SqlServer";
+            var guidType = isSqlServer ? "uniqueidentifier" : "TEXT";
+            var intType = isSqlServer ? "int" : "INTEGER";
+            var boolType = isSqlServer ? "bit" : "INTEGER";
+
             migrationBuilder.CreateTable(
                 name: "PageSpeedOptimizer_MediaExceptions",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    MediaKey = table.Column<Guid>(nullable: false),
-                    Quality = table.Column<int>(nullable: false),
-                    ForceWebp = table.Column<bool>(nullable: false)
+                    Id = table.Column<Guid>(type: guidType, nullable: false),
+                    MediaKey = table.Column<Guid>(type: guidType, nullable: false),
+                    Quality = table.Column<int>(type: intType, nullable: false),
+                    ForceWebp = table.Column<bool>(type: boolType, nullable: false)
                 },
                 constraints: table =>
                 {
