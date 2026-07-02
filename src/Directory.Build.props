@@ -41,9 +41,9 @@
       <RepositoryType>git</RepositoryType>
       <Copyright>Copyright &amp;#169; Dave Woestenborghs and contributors.</Copyright>
       <PackageLicenseExpression>MIT</PackageLicenseExpression>
-      <AssemblyVersion>17.2.0</AssemblyVersion>
-      <VersionPrefix>17.2.0</VersionPrefix>
-      <InformationalVersion>17.2.0</InformationalVersion>
+      <AssemblyVersion>17.2.1</AssemblyVersion>
+      <VersionPrefix>17.2.1</VersionPrefix>
+      <InformationalVersion>17.2.1</InformationalVersion>
     </PropertyGroup>
 
   <PropertyGroup>
