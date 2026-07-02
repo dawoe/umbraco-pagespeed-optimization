@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
   <ItemGroup>
     <ProjectReference Include="..\Umbraco.Community.PagespeedOptimizer.Infrastructure\Umbraco.Community.PagespeedOptimizer.Infrastructure.csproj" />
+    <ProjectReference Include="..\Umbraco.Community.PagespeedOptimizer.BackOffice\Umbraco.Community.PagespeedOptimizer.BackOffice.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
