@@ -59,19 +59,19 @@ export class MediaExceptionWorkspaceView extends UmbElementMixin(LitElement) {
     this._loading = true;
 
     const [byKeyResult, defaultsResult] = await Promise.all([
-      tryExecute(this, PageSpeedOptimizer.getByMediaKey({ path: { mediaKey } })),
-      tryExecute(this, PageSpeedOptimizer.getDefaultValues()),
+      tryExecute(this, PageSpeedOptimizer.getMediaExceptionByMediaKeyByMediaKey({ path: { mediaKey } })),
+      tryExecute(this, PageSpeedOptimizer.getMediaExceptionDefaultValues()),
     ]);
 
     if (defaultsResult.data) {
-      this.#defaultQuality = defaultsResult.data.defaultImageQuality;
+      this.#defaultQuality = Number(defaultsResult.data.defaultImageQuality);
       this.#defaultForceWebp = defaultsResult.data.forceWebP;
     }
 
     if (byKeyResult.data) {
       this.#existingId = byKeyResult.data.id;
       this._override = true;
-      this._quality = byKeyResult.data.quality;
+      this._quality = Number(byKeyResult.data.quality);
       this._forceWebp = byKeyResult.data.forceWebp;
     } else {
       this.#existingId = undefined;
@@ -109,7 +109,7 @@ export class MediaExceptionWorkspaceView extends UmbElementMixin(LitElement) {
       if (this.#existingId) {
         const { error } = await tryExecute(
           this,
-          PageSpeedOptimizer.updateMediaException({
+          PageSpeedOptimizer.putMediaExceptionById({
             path: { id: this.#existingId },
             body: { quality: this._quality, forceWebp: this._forceWebp },
           }),
@@ -118,7 +118,7 @@ export class MediaExceptionWorkspaceView extends UmbElementMixin(LitElement) {
       } else {
         const { data, error } = await tryExecute(
           this,
-          PageSpeedOptimizer.createMediaException({
+          PageSpeedOptimizer.postMediaException({
             body: { mediaKey: this.#mediaKey, quality: this._quality, forceWebp: this._forceWebp },
           }),
         );
@@ -130,7 +130,7 @@ export class MediaExceptionWorkspaceView extends UmbElementMixin(LitElement) {
     } else if (this.#existingId) {
       const { error } = await tryExecute(
         this,
-        PageSpeedOptimizer.deleteMediaException({ path: { id: this.#existingId } }),
+        PageSpeedOptimizer.deleteMediaExceptionById({ path: { id: this.#existingId } }),
       );
       if (!error) {
         this.#existingId = undefined;

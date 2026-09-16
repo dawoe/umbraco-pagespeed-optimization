@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a NuGet package for Umbraco CMS (v17.x, targeting .NET 10) that provides three page speed optimizations:
+This is a NuGet package for Umbraco CMS (v18.x, targeting .NET 10) that provides three page speed optimizations:
 
 - **Static asset caching** — cache-control headers for browser caching
 - **Image optimization** — quality/format conversion with WebP support
@@ -44,14 +44,24 @@ dotnet test src/test/Umbraco.Community.PagespeedOptimizer.Infrastructure.Tests/
 dotnet pack -c Release --no-restore --no-build src/
 ```
 
+### Regenerating the OpenAPI document / TypeScript client
+
+The management API's OpenAPI document is served at `/umbraco/openapi/pagespeed-optimizer-management-api.json`
+(the old `/umbraco/swagger/...` URL is gone in Umbraco 18). To regenerate the committed client:
+
+1. Boot `test-sites/Website-V18` (it must actually be running — the document is generated at runtime).
+2. `curl -sk https://localhost:44371/umbraco/openapi/pagespeed-optimizer-management-api.json -o swagger.json` into `src/code/Umbraco.Community.PagespeedOptimizer.BackOffice.Client/`.
+3. Strip the top-level `servers` block before committing — it carries the dev machine's own `https://localhost:44371/` into the generated `client.gen.ts` / `types.gen.ts` as a hard-coded `baseUrl` and would ship in the production bundle.
+4. In `src/code/Umbraco.Community.PagespeedOptimizer.BackOffice.Client/`, run `npm run generate-api` and rebuild with `npm run build`.
+
 ## Code Style
 
 StyleCop.Analyzers is enforced with warnings-as-errors. Key rules from `src/stylecop.json`:
 
-- `using` directives go **inside** the namespace
-- XML documentation comments are required on public members
-- All files must have a copyright header
-- Nullable reference types are enabled
+- `using` directives go **outside** the namespace (`usingDirectivesPlacement: outsideNamespace`; also enforced by `src/.editorconfig`'s `csharp_using_directive_placement = outside_namespace:warning`).
+- XML documentation comments are required on **public and internal** members (`documentInternalElements: true`).
+- All files must have a copyright header.
+- Nullable reference types are enabled.
 
 ## Architecture Notes
 
@@ -63,9 +73,18 @@ StyleCop.Analyzers is enforced with warnings-as-errors. Key rules from `src/styl
 - **`BackOffice` project** is a Razor class library (`Microsoft.NET.Sdk.Razor`) that will host back-office UI for managing the optimizer settings from within the Umbraco admin panel.
 - **Media Exception Workspace View** — `pagespeedoptimizer.workspaceView.mediaException` (in `Umbraco.Community.PagespeedOptimizer.BackOffice.Client/src/workspaces/media-exception/`) shows an "Override image optimizations" toggle, quality slider, and Force WebP toggle on Media items of type "Image", backed by `MediaExceptionManagementApiController`. It is gated by three workspace conditions: `Umb.Workspace.Media`, the built-in `Umb.Condition.WorkspaceContentTypeAlias` (matching `Image`), and a custom `pagespeedoptimizer.condition.imageOptimizationEnabled` condition (in `src/conditions/image-optimization-enabled/`) that calls the `GetDefaultValues` endpoint to check `ImageOptimizationSettings.Enabled`. The view has its own Save button — Umbraco's workspace/save pipeline has no extension point for a `workspaceView` to hook into a host workspace's native save.
 
-## Test Site
+## Test Sites
 
-`test-sites/Website-V17/` is a full Umbraco v17 site used for manual testing. It is not part of the solution build.
+`test-sites/Website-V18/` is a full Umbraco v18 site (Clean 8.0.1 starter kit) used for manual testing. It is in the solution but is not packed or published.
+
+`test-sites/Website-V17/` is the previous Umbraco v17 site. It is deliberately **outside** the solution and references the published `Umbraco.Community.PagespeedOptimizer` 17.2.1 NuGet package rather than the local sources, which now target Umbraco 18. Keep it that way — adding it back to the solution will break `dotnet restore src/`.
+
+## Releasing a new version
+
+`src/code/Umbraco.Community.PagespeedOptimizer.BackOffice.Client/public/umbraco-package.json` carries its own
+`version` field and a `?v=` cache-buster on the `entry-point.js` reference. It is copied into the nupkg as a
+static web asset and is **not** driven by MSBuild versioning, so it must be bumped by hand on every release,
+alongside `AssemblyVersion` / `VersionPrefix` / `InformationalVersion` in `src/Directory.Build.props`.
 
 ## Branch Strategy
 
