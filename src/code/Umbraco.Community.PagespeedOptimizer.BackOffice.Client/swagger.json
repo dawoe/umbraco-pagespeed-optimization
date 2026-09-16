@@ -4,11 +4,6 @@
     "title": "PageSpeed Optimizer Management API",
     "version": "1.0.0"
   },
-  "servers": [
-    {
-      "url": "https://localhost:44371/"
-    }
-  ],
   "paths": {
     "/umbraco/pagespeed-optimizer/v1/media-exception": {
       "post": {
@@ -37,19 +32,19 @@
               }
             }
           },
-          "409": {
-            "description": "Conflict"
-          },
           "401": {
             "description": "The resource is protected and requires an authentication token"
           },
           "403": {
             "description": "The authenticated user does not have access to this resource"
+          },
+          "409": {
+            "description": "Conflict"
           }
         },
         "security": [
           {
-            "Backoffice-User": [ ]
+            "Backoffice-User": []
           }
         ]
       }
@@ -92,19 +87,19 @@
               }
             }
           },
-          "404": {
-            "description": "Not Found"
-          },
           "401": {
             "description": "The resource is protected and requires an authentication token"
           },
           "403": {
             "description": "The authenticated user does not have access to this resource"
+          },
+          "404": {
+            "description": "Not Found"
           }
         },
         "security": [
           {
-            "Backoffice-User": [ ]
+            "Backoffice-User": []
           }
         ]
       },
@@ -128,19 +123,19 @@
           "200": {
             "description": "OK"
           },
-          "404": {
-            "description": "Not Found"
-          },
           "401": {
             "description": "The resource is protected and requires an authentication token"
           },
           "403": {
             "description": "The authenticated user does not have access to this resource"
+          },
+          "404": {
+            "description": "Not Found"
           }
         },
         "security": [
           {
-            "Backoffice-User": [ ]
+            "Backoffice-User": []
           }
         ]
       }
@@ -182,7 +177,7 @@
         },
         "security": [
           {
-            "Backoffice-User": [ ]
+            "Backoffice-User": []
           }
         ]
       }
@@ -213,7 +208,7 @@
         },
         "security": [
           {
-            "Backoffice-User": [ ]
+            "Backoffice-User": []
           }
         ]
       }
@@ -333,7 +328,7 @@
           "authorizationCode": {
             "authorizationUrl": "/umbraco/management/api/v1/security/back-office/authorize",
             "tokenUrl": "/umbraco/management/api/v1/security/back-office/token",
-            "scopes": { }
+            "scopes": {}
           }
         }
       }
@@ -341,7 +336,7 @@
   },
   "security": [
     {
-      "Backoffice-User": [ ]
+      "Backoffice-User": []
     }
   ],
   "tags": [

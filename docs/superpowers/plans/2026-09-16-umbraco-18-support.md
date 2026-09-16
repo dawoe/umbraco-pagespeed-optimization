@@ -777,6 +777,16 @@ If the fetched JSON is minified, pretty-print it so the committed file stays dif
 node -e "const f='swagger.json';const j=JSON.parse(require('fs').readFileSync(f,'utf8'));require('fs').writeFileSync(f,JSON.stringify(j,null,2)+'\n')"
 ```
 
+Before committing, strip the top-level `servers` block. Umbraco bakes the dev machine's own
+`https://localhost:<port>/` into it, and that absolute URL would otherwise flow into the
+generated `client.gen.ts` / `types.gen.ts` as a hard-coded `baseUrl` and ship in the production
+bundle. It is overridden at runtime by `umbHttpClient.getConfig()` in `src/hey-api.ts`, but the
+committed spec should not depend on that ordering:
+
+```bash
+node -e "const f='swagger.json';const j=JSON.parse(require('fs').readFileSync(f,'utf8'));delete j.servers;require('fs').writeFileSync(f,JSON.stringify(j,null,2)+'\n')"
+```
+
 - [ ] **Step 4: Regenerate the API client**
 
 ```bash
