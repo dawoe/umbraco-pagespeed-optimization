@@ -63,9 +63,11 @@ StyleCop.Analyzers is enforced with warnings-as-errors. Key rules from `src/styl
 - **`BackOffice` project** is a Razor class library (`Microsoft.NET.Sdk.Razor`) that will host back-office UI for managing the optimizer settings from within the Umbraco admin panel.
 - **Media Exception Workspace View** — `pagespeedoptimizer.workspaceView.mediaException` (in `Umbraco.Community.PagespeedOptimizer.BackOffice.Client/src/workspaces/media-exception/`) shows an "Override image optimizations" toggle, quality slider, and Force WebP toggle on Media items of type "Image", backed by `MediaExceptionManagementApiController`. It is gated by three workspace conditions: `Umb.Workspace.Media`, the built-in `Umb.Condition.WorkspaceContentTypeAlias` (matching `Image`), and a custom `pagespeedoptimizer.condition.imageOptimizationEnabled` condition (in `src/conditions/image-optimization-enabled/`) that calls the `GetDefaultValues` endpoint to check `ImageOptimizationSettings.Enabled`. The view has its own Save button — Umbraco's workspace/save pipeline has no extension point for a `workspaceView` to hook into a host workspace's native save.
 
-## Test Site
+## Test Sites
 
-`test-sites/Website-V17/` is a full Umbraco v17 site used for manual testing. It is not part of the solution build.
+`test-sites/Website-V18/` is a full Umbraco v18 site (Clean 8.0.1 starter kit) used for manual testing. It is in the solution but is not packed or published.
+
+`test-sites/Website-V17/` is the previous Umbraco v17 site. It is deliberately **outside** the solution and references the published `Umbraco.Community.PagespeedOptimizer` 17.2.1 NuGet package rather than the local sources, which now target Umbraco 18. Keep it that way — adding it back to the solution will break `dotnet restore src/`.
 
 ## Branch Strategy
 

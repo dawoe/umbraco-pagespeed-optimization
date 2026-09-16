@@ -11,7 +11,6 @@
   <Folder Name="/_BuildProps/test/">
     <File Path="test/Directory.Build.props" />
   </Folder>
-  <Project Path="../test-sites/Website-V17/Website-V17.csproj" />
   <Project Path="code/Umbraco.Community.PagespeedOptimizer.BackOffice/Umbraco.Community.PagespeedOptimizer.BackOffice.csproj" />
   <Project Path="code/Umbraco.Community.PagespeedOptimizer.Core/Umbraco.Community.PagespeedOptimizer.Core.csproj" />
   <Project Path="code/Umbraco.Community.PagespeedOptimizer.Infrastructure/Umbraco.Community.PagespeedOptimizer.Infrastructure.csproj" />
