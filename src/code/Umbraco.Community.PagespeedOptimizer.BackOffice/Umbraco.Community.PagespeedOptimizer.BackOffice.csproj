@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <StaticWebAssetBasePath>/</StaticWebAssetBasePath>
+    <!-- Required for class libraries so the Microsoft.AspNetCore.OpenApi source generator compiles. -->
+    <InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.AspNetCore.OpenApi.Generated</InterceptorsNamespaces>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,7 +12,6 @@
 
   <ItemGroup>
     <PackageReference Include="Umbraco.Cms.Api.Management" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" />
   </ItemGroup>
 
   <ItemGroup>

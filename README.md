@@ -1,5 +1,7 @@
 # Umbraco PageSpeed Optimizer
 
+This release targets Umbraco 18 (18.1.1+). Umbraco 17 support ends at package version 17.2.1.
+
 This Umbraco package improves your Google page speed score by optionally applying :
 
 - Static assets cache

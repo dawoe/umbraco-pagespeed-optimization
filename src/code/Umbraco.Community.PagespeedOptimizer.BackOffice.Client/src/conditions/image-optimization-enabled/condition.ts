@@ -15,7 +15,7 @@ export class ImageOptimizationEnabledCondition
   constructor(host: UmbControllerHost, args: UmbConditionControllerArguments<UmbConditionConfigBase>) {
     super(host, args);
 
-    tryExecute(this, PageSpeedOptimizer.getDefaultValues()).then(({ data }) => {
+    tryExecute(this, PageSpeedOptimizer.getMediaExceptionDefaultValues()).then(({ data }) => {
       this.permitted = data?.enabled ?? false;
     });
   }
