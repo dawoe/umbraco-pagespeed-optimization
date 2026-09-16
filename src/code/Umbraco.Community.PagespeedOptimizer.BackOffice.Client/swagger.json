@@ -4,6 +4,11 @@
     "title": "PageSpeed Optimizer Management API",
     "version": "1.0.0"
   },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
   "paths": {
     "/umbraco/pagespeed-optimizer/v1/media-exception": {
       "post": {
