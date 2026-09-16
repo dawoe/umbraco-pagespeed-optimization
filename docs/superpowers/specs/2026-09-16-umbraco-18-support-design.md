@@ -149,7 +149,13 @@ and `Umbraco.Cms.DevelopmentMode.Backoffice`. It mirrors the V17 site:
 placed before `await app.BootUmbracoAsync()`.
 
 **`appsettings.json`** — copied from the V17 site, with a newly generated `Umbraco:CMS:Global:Id`
-GUID. The package configuration block is carried over unchanged:
+GUID, plus one deliberate divergence from V17: the `Umbraco:CMS:Imaging:HMACSecretKey` block that
+the Umbraco 18 project template generates is **kept**. It enables signed image URLs, an Umbraco 18
+default that many production sites will run with. Because `OptimizedImageUrlGenerator` mutates
+`ImageUrlGenerationOptions` and then delegates to Umbraco's own generator, the signature is computed
+over the final URL including the package's injected quality and format parameters — so the test site
+exercises signed-URL compatibility rather than avoiding it. The package configuration block is
+carried over unchanged:
 
 ```json
 "Umbraco": {

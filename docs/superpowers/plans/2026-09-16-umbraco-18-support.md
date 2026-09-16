@@ -917,6 +917,7 @@ This step is manual and is not automated.
 5. Reload the page and confirm the saved values persist (quality 30, Force WebP off).
 6. Open the image on the front end of the site. In the browser's network tab, confirm the request for that image carries the overridden quality in its URL and is **not** served as WebP.
 7. Delete the override and confirm the image reverts to quality 70 / WebP.
+8. Confirm the delivered image URLs carry ImageSharp's HMAC signature (an `hmac=` query parameter) and that the images actually render rather than returning 400/404. The V18 site sets `Umbraco:CMS:Imaging:HMACSecretKey`, so image URLs are signed; this confirms the package's URL rewriting stays inside the signature rather than invalidating it.
 
 - [ ] **Step 6: Manual front-end check — caching and compression**
 
