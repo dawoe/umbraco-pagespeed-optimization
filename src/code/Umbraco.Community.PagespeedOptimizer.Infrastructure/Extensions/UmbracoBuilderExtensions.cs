@@ -145,7 +145,8 @@ internal static class UmbracoBuilderExtensions
                 {
                     optionsBuilder.UseDatabaseProvider(providerName, connectionString);
                 }
-            });
+            },
+            shareUmbracoConnection: true);
 
         builder.Services.AddSingleton<IMediaExceptionRepository, MediaExceptionRepository>();
 
