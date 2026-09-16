@@ -318,10 +318,12 @@ Expected: all tests pass across `Umbraco.Community.PagespeedOptimizer.Infrastruc
 - [ ] **Step 8: Confirm Swashbuckle is fully gone**
 
 ```bash
-grep -rn "Swashbuckle\|AddSwaggerGen\|SwaggerDoc" --include="*.cs" --include="*.csproj" --include="*.props" --include="*.json" src/ | grep -v "/obj/" | grep -v "/bin/" | grep -v node_modules
+grep -rn "Swashbuckle\|AddSwaggerGen\|SwaggerDoc" --include="*.cs" --include="*.csproj" --include="*.props" src/ | grep -v "/obj/" | grep -v "/bin/" | grep -v node_modules
 ```
 
-Expected: no output. (`swagger.json` is a filename, not a Swashbuckle reference — it contains none of these strings and is regenerated in Task 4.)
+Expected: no output.
+
+Do **not** widen this to `--include="*.json"`. The regenerated `packages.lock.json` files legitimately contain `Swashbuckle.AspNetCore.SwaggerUI` as a `"type": "Transitive"` dependency of Umbraco's own `Umbraco.Cms.Core` / `Umbraco.Cms.Web.Website` packages — Umbraco 18 still uses Swashbuckle's UI to render its OpenAPI page. That is Umbraco's dependency, not ours, and cannot be removed from this repo. The constraint is that *this package* adds no Swashbuckle reference, which the command above checks.
 
 - [ ] **Step 9: Commit**
 
