@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - Target framework stays `net10.0` everywhere. Do not change it.
-- Umbraco package version range is exactly `[18.0.0,19.0.0)`. The V18 test site pins `18.1.1`.
+- Umbraco package version range is exactly `[18.1.1,19.0.0)`. The V18 test site pins `18.1.1`. The floor was raised from `[18.0.0,19.0.0)` because the backoffice client is built against `@umbraco-cms/backoffice` `^18.1.1`.
 - Package version is exactly `18.0.0` (`AssemblyVersion`, `VersionPrefix`, `InformationalVersion`).
 - StyleCop.Analyzers runs with warnings-as-errors. `Nullable` is also warnings-as-errors.
 - StyleCop config (`src/stylecop.json`) sets `usingDirectivesPlacement: outsideNamespace` — `using` directives go **outside** the namespace. (Note: `CLAUDE.md` currently states the opposite; the JSON is authoritative.)
@@ -211,15 +211,19 @@ with:
 
 ```xml
   <ItemGroup>
-    <PackageVersion Include="Umbraco.Cms.Web.Website" Version="[18.0.0,19.0.0)" />
-    <PackageVersion Include="Umbraco.Cms.Core" Version="[18.0.0,19.0.0)" />
-    <PackageVersion Include="Umbraco.Cms.Api.Management" Version="[18.0.0,19.0.0)" />
-    <PackageVersion Include="Umbraco.Cms.Imaging.ImageSharp" Version="[18.0.0,19.0.0)" />
-    <PackageVersion Include="Umbraco.Cms.Persistence.EFCore" Version="[18.0.0,19.0.0)" />
+    <PackageVersion Include="Umbraco.Cms.Web.Website" Version="[18.1.1,19.0.0)" />
+    <PackageVersion Include="Umbraco.Cms.Core" Version="[18.1.1,19.0.0)" />
+    <PackageVersion Include="Umbraco.Cms.Api.Management" Version="[18.1.1,19.0.0)" />
+    <PackageVersion Include="Umbraco.Cms.Imaging.ImageSharp" Version="[18.1.1,19.0.0)" />
+    <PackageVersion Include="Umbraco.Cms.Persistence.EFCore" Version="[18.1.1,19.0.0)" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.6" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.6" />
   </ItemGroup>
 ```
+
+The floor is `18.1.1`, not `18.0.0`, because the backoffice client is built against
+`@umbraco-cms/backoffice` `^18.1.1`; the C# floor is raised to match rather than shipping a
+bundle type-checked against a newer Umbraco than the package claims to support.
 
 Leave the StyleCop and test-stack `<ItemGroup>`s exactly as they are.
 

@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageVersion Include="Umbraco.Cms.Web.Website" Version="[18.0.0,19.0.0)" />
-    <PackageVersion Include="Umbraco.Cms.Core" Version="[18.0.0,19.0.0)" />
-    <PackageVersion Include="Umbraco.Cms.Api.Management" Version="[18.0.0,19.0.0)" />
-    <PackageVersion Include="Umbraco.Cms.Imaging.ImageSharp" Version="[18.0.0,19.0.0)" />
-    <PackageVersion Include="Umbraco.Cms.Persistence.EFCore" Version="[18.0.0,19.0.0)" />
+    <PackageVersion Include="Umbraco.Cms.Web.Website" Version="[18.1.1,19.0.0)" />
+    <PackageVersion Include="Umbraco.Cms.Core" Version="[18.1.1,19.0.0)" />
+    <PackageVersion Include="Umbraco.Cms.Api.Management" Version="[18.1.1,19.0.0)" />
+    <PackageVersion Include="Umbraco.Cms.Imaging.ImageSharp" Version="[18.1.1,19.0.0)" />
+    <PackageVersion Include="Umbraco.Cms.Persistence.EFCore" Version="[18.1.1,19.0.0)" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.6" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.6" />
   </ItemGroup>

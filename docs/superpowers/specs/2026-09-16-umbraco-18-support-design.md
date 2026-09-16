@@ -22,7 +22,7 @@ The dominant breaking change is that Umbraco 18 replaces Swashbuckle with
 | V18 test site | `dotnet new umbraco` (18.1.1) + `Clean` 8.0.1 starter kit, mirroring the V17 site. |
 | `swagger.json` | Regenerated from a running V18 site, not hand-edited. |
 | Operation IDs | Accept Umbraco 18 defaults; delete the custom handler and update the TS call sites. |
-| Umbraco version range | `[18.0.0,19.0.0)` for package references; test site pinned to 18.1.1. |
+| Umbraco version range | `[18.1.1,19.0.0)` for package references; test site pinned to 18.1.1. Raised from `[18.0.0,19.0.0)` because the backoffice client is built against `@umbraco-cms/backoffice` 18.1.1. |
 
 ## Verified Umbraco 18 API surface
 
@@ -51,13 +51,18 @@ Target framework is unchanged: Umbraco 18 is still `net10.0`.
 `src/Directory.Build.props` — set `AssemblyVersion`, `VersionPrefix`, and `InformationalVersion`
 to `18.0.0`.
 
-`src/Directory.Packages.props` — move these five ranges from `[17.0.0,18.0.0)` to `[18.0.0,19.0.0)`:
+`src/Directory.Packages.props` — move these five ranges from `[17.0.0,18.0.0)` to `[18.1.1,19.0.0)`:
 
 - `Umbraco.Cms.Web.Website`
 - `Umbraco.Cms.Core`
 - `Umbraco.Cms.Api.Management`
 - `Umbraco.Cms.Imaging.ImageSharp`
 - `Umbraco.Cms.Persistence.EFCore`
+
+The floor is `18.1.1`, not `18.0.0`, because the backoffice client is built against
+`@umbraco-cms/backoffice` `^18.1.1`. Allowing the package to install on Umbraco 18.0.0 would ship
+a bundle type-checked against a newer backoffice than the host actually provides, so the C# floor
+is raised to match the client's floor rather than lowering the client's.
 
 Remove the `Swashbuckle.AspNetCore.SwaggerGen` `PackageVersion` entry. EF Core 10.0.6, StyleCop,
 and the NUnit/Moq/coverlet test stack are unchanged.
